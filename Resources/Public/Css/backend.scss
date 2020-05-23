@@ -1,0 +1,76 @@
+.typo3-messages {
+    max-width: 768px;
+    margin: 0 auto;
+}
+
+small {
+    font-weight: normal;
+    line-height: 1;
+    color: #737373;
+}
+
+form[name="searchForm"] {
+
+	input[name="searchTerm"] {
+		padding: 20px;
+		height: auto;
+		font-size: 1.5em;
+	}
+
+	.clearSearchForm {
+		width: 32px;
+		height: 32px;
+		display: none;
+	}
+}
+
+form[name="commentForm"] {
+
+    textarea[name="comment"] {
+
+    }
+}
+
+#requestTypesNavigation {
+
+	.media-left {
+		padding-right: 20px;
+	}
+
+    .media-body {
+
+        a {
+            color: #0f74a8;
+        }
+    }
+}
+
+#requestTypesResultList {
+	display: none;
+
+	.media-left {
+		padding-right: 20px;
+	}
+
+    a {
+        color: #0f74a8;
+    }
+}
+
+table.request-table {
+    background-color: transparent;
+    border: 0 none;
+
+    & > tbody > tr > th {
+        border-top: 0 none;
+        padding: 6px 12px;
+    }
+
+    & > tbody > tr > td {
+        padding: 12px 12px;
+    }
+
+    a {
+        color: #0f74a8;
+    }
+}

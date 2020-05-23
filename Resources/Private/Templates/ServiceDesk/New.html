@@ -1,0 +1,40 @@
+<f:layout name="Default" />
+
+<f:section name="content">
+
+	<div class="container container-small">
+
+		<div class="row">
+			<div class="col-sm-8">
+				<h1>{requestType.name}</h1>
+				<p class="lead">{requestType.description}</p>
+				<f:if condition="{requestType.helpText}"><p>{requestType.helpText}</p></f:if>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-8">
+
+				<f:render partial="Form/Request" arguments="{_all}"/>
+
+			</div>
+			<div class="col-sm-3 col-sm-offset-1">
+
+				<ul class="nav nav-pills nav-stacked">
+					<li role="presentation">
+						<f:link.action action="index" controller="ServiceDesk" title="{f:translate(key: 'label.back', extensionName: 'jira_service_desk')}">
+							<core:icon identifier="actions-version-workspace-sendtoprevstage" size="small"/> <f:translate key="label.back" extensionName="jira_service_desk"/>
+						</f:link.action>
+					</li>
+					<li role="presentation">
+						<f:link.action action="new" controller="ServiceDesk" arguments="{requestTypeId: requestType.id}" title="{f:translate(key: 'label.reload', extensionName: 'jira_service_desk')}">
+							<core:icon identifier="actions-refresh" size="small"/> <f:translate key="label.reload" extensionName="jira_service_desk"/>
+						</f:link.action>
+					</li>
+				</ul>
+
+			</div>
+		</div>
+	</div>
+
+</f:section>

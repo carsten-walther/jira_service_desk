@@ -1,0 +1,205 @@
+<f:layout name="Default" />
+
+<f:section name="content">
+
+	<div class="container container-small">
+
+		<div class="row">
+			<div class="col-sm-8">
+				<f:for each="{customerRequest.body.requestFieldValues}" as="requestFieldValue">
+					<f:switch expression="{requestFieldValue.fieldId}">
+						<f:case value="summary">
+							<f:if condition="{requestFieldValue.value}">
+								<h1>{requestFieldValue.value}</h1>
+							</f:if>
+						</f:case>
+					</f:switch>
+				</f:for>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-8">
+
+				<ul class="media-list">
+					<li class="media">
+						<div class="media-left">
+							<img class="media-object" src="{customerRequest.body.reporter._links.avatarUrls.32x32}" alt="{customerRequest.body.reporter.displayName}">
+						</div>
+						<div class="media-body">
+							<f:render partial="Form/Comment" arguments="{_all}"/>
+						</div>
+					</li>
+				</ul>
+
+				<h3>
+					<f:translate key="label.activities" extensionName="jira_service_desk"/>
+				</h3>
+
+				<ul class="media-list">
+					<li class="divider"><hr style="border-top: 1px solid #cdcdcd"></li>
+					<f:for each="{customerRequest.body.status.values}" as="state" iteration="stateIteration">
+						<f:if condition="{state.status}">
+							<li class="media">
+								<div class="media-left">
+									<div style="width: 32px;"></div>
+								</div>
+								<div class="media-body">
+									<f:format.raw><f:translate key="label.activityChangedTo" extensionName="jira_service_desk" arguments="{0: state.status}" /></f:format.raw>
+									<small>{state.statusDate.friendly}</small>
+									<f:if condition="{stateIteration.isFirst}">
+										<span class="label label-default"><f:translate key="label.newest" extensionName="jira_service_desk"/></span>
+									</f:if>
+								</div>
+							</li>
+						</f:if>
+						<f:if condition="{state.body}">
+							<li class="media">
+								<div class="media-left">
+									<img class="media-object" src="{state.author._links.avatarUrls.32x32}" alt="">
+								</div>
+								<div class="media-body">
+									<h4 class="media-heading">
+										<f:link.email email="{state.author.emailAddress}">{state.author.displayName}</f:link.email>
+										<small>{state.created.friendly}</small>
+										<f:if condition="{stateIteration.isFirst}">
+											<span class="label label-default"><f:translate key="label.newest" extensionName="jira_service_desk"/></span>
+										</f:if>
+									</h4>
+									{state.body}
+									<f:if condition="{state.attachments}">
+										<f:for each="{state.attachments}" as="attachment">
+											<div class="row">
+												<div class="col-sm-6">
+													<f:debug inline="1">{attachment}</f:debug>
+												</div>
+											</div>
+										</f:for>
+									</f:if>
+								</div>
+							</li>
+						</f:if>
+						<li class="divider"><hr style="border-top: 1px solid #cdcdcd"></li>
+					</f:for>
+				</ul>
+
+				<ul class="media-list">
+					<li class="media">
+						<div class="media-left">
+							<div style="width: 32px;"></div>
+						</div>
+						<div class="media-body">
+							<h4 class="media-heading">
+								<f:translate key="label.details" extensionName="jira_service_desk"/>
+								<small>{customerRequest.body.createdDate.friendly}</small>
+							</h4>
+							<f:for each="{customerRequest.body.requestFieldValues}" as="requestFieldValue">
+								<f:switch expression="{requestFieldValue.fieldId}">
+									<f:case value="components">
+										<f:if condition="{requestFieldValue.value}">
+											<p><strong>{requestFieldValue.label}</strong></p>
+											<p><small><f:for each="{requestFieldValue.value}" as="val" iteration="valIteration">{val.name}<f:if condition="{valIteration.isLast}"><f:else>, </f:else></f:if></f:for></small></p>
+										</f:if>
+									</f:case>
+									<f:case value="priority">
+										<f:if condition="{requestFieldValue.value.name}">
+											<p><strong>{requestFieldValue.label}</strong></p>
+											<p><small>{requestFieldValue.value.name}</small></p>
+										</f:if>
+									</f:case>
+									<f:case value="attachment">
+										<f:if condition="{requestFieldValue.value}">
+											<p><strong>{requestFieldValue.label}</strong></p>
+											<p><small> </small></p>
+										</f:if>
+									</f:case>
+									<f:case value="duedate">
+										<f:if condition="{requestFieldValue.value}">
+											<p><strong>{requestFieldValue.label}</strong></p>
+											<p><small>{requestFieldValue.renderedValue}</small></p>
+										</f:if>
+									</f:case>
+									<f:defaultCase>
+										<f:if condition="{requestFieldValue.value}">
+											<p><strong>{requestFieldValue.label}</strong></p>
+											<p><small>{requestFieldValue.value}</small></p>
+										</f:if>
+									</f:defaultCase>
+								</f:switch>
+							</f:for>
+						</div>
+					</li>
+				</ul>
+
+			</div>
+			<div class="col-sm-3 col-sm-offset-1">
+
+				<ul class="nav nav-pills nav-stacked">
+					<li role="presentation">
+						<f:link.action action="list" controller="ServiceDesk" title="{f:translate(key: 'label.back', extensionName: 'jira_service_desk')}">
+							<core:icon identifier="actions-version-workspace-sendtoprevstage" size="small"/> <f:translate key="label.back" extensionName="jira_service_desk"/>
+						</f:link.action>
+					</li>
+					<li role="presentation">
+						<f:link.action action="show" controller="ServiceDesk" arguments="{issueId: customerRequest.body.issueId, issueKey: customerRequest.body.issueKey}" title="{f:translate(key: 'label.reload', extensionName: 'jira_service_desk')}">
+							<core:icon identifier="actions-refresh" size="small"/> <f:translate key="label.reload" extensionName="jira_service_desk"/>
+						</f:link.action>
+					</li>
+					<li role="presentation" class="nav-divider"></li>
+					<f:comment>
+					<li role="presentation">
+						<f:link.action action="unsubscribe" controller="ServiceDesk" arguments="{issueId: customerRequest.body.issueId, issueKey: customerRequest.body.issueKey}" title="{f:translate(key: 'label.unsubscribeAction', extensionName: 'jira_service_desk')}" target="#" onclick="TYPO3.ServiceDesk.unsubscribe({customerRequest.body.issueId}, '{customerRequest.body.issueKey}'); return false;">
+							<core:icon identifier="actions-edit-hide" size="small"/> <f:translate key="label.unsubscribeAction" extensionName="jira_service_desk"/>
+						</f:link.action>
+					</li>
+					</f:comment>
+					<f:comment>
+					<li role="presentation">
+						<f:link.action action="subscribe" controller="ServiceDesk" arguments="{issueId: customerRequest.body.issueId, issueKey: customerRequest.body.issueKey}" title="{f:translate(key: 'label.subscribeAction', extensionName: 'jira_service_desk')}" target="#" onclick="TYPO3.ServiceDesk.subscribe({customerRequest.body.issueId}, '{customerRequest.body.issueKey}'); return false;">
+							<core:icon identifier="actions-edit-unhide" size="small"/> <f:translate key="label.subscribeAction" extensionName="jira_service_desk"/>
+						</f:link.action>
+					</li>
+					</f:comment>
+					<f:comment>
+					<li role="presentation">
+						<f:link.action action="share" controller="ServiceDesk" arguments="{requestId: customerRequest.body.issueId}" title="{f:translate(key: 'label.shareAction', extensionName: 'jira_service_desk')}" target="#" onclick="return false;">
+							<core:icon identifier="actions-insert-reference" size="small"/> <f:translate key="label.shareAction" extensionName="jira_service_desk"/>
+						</f:link.action>
+					</li>
+					</f:comment>
+					<f:for each="{transitions.body.values}" as="transition">
+						<li role="presentation">
+							<f:link.action action="addTransition" controller="ServiceDesk" arguments="{requestId: customerRequest.body.issueId, transitionId: transition.id}" title="{transition.name}" target="#" onclick="TYPO3.ServiceDesk.createCustomerTransition({customerRequest.body.issueId}, {transition.id}); return false;">
+								<core:icon identifier="actions-check" size="small"/> {transition.name}
+							</f:link.action>
+						</li>
+					</f:for>
+				</ul>
+
+				<h3>
+					<f:translate key="label.requestStatus" extensionName="jira_service_desk"/>
+				</h3>
+				<div>
+					<p><span class="label {f:if(condition: '{customerRequest.body.currentStatus.status} == \'Offen\'', then: ' label-default')}{f:if(condition: '{customerRequest.body.currentStatus.status} == \'Laufende Arbeiten\'', then: ' label-warning')}{f:if(condition: '{customerRequest.body.currentStatus.status} == \'Wartet auf Kunden\'', then: ' label-danger')}{f:if(condition: '{customerRequest.body.currentStatus.status} == \'Fertig\'', then: ' label-success')}">{customerRequest.body.currentStatus.status}</span></p>
+				</div>
+
+				<h3>
+					<f:translate key="label.sharedWith" extensionName="jira_service_desk"/>
+				</h3>
+				<div>
+					<img src="{customerRequest.body.reporter._links.avatarUrls.32x32}" alt="{customerRequest.body.reporter.displayName}" width="32" height="32" class="pull-left" style="margin-right: 10px;">
+					<p>{customerRequest.body.reporter.displayName}<br><small><f:translate key="label.reporter" extensionName="jira_service_desk"/></small></p>
+				</div>
+				<f:if condition="{customerRequest.body.participants.size} > 0">
+					<f:for each="{customerRequest.body.participants.values}" as="participant">
+						<div>
+							<img src="{participant._links.avatarUrls.32x32}" alt="{participant.displayName}" width="32" height="32" class="pull-left" style="margin-right: 10px;">
+							<p>{participant.displayName}</p>
+						</div>
+					</f:for>
+				</f:if>
+
+			</div>
+		</div>
+	</div>
+</f:section>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" product-name="jira_service_desk">
+		<header/>
+		<body>
+			<trans-unit id="config.basic.adminAccessOnly">
+				<source>If enabled, only administrators have access to the Service Desk.</source>
+			</trans-unit>
+			<trans-unit id="config.basic.serviceDeskId">
+				<source>Enter the ID of the available Service Desk here.</source>
+			</trans-unit>
+			<trans-unit id="config.basic.serviceDeskUrl">
+				<source>Enter the URL of the available Service Desk here.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

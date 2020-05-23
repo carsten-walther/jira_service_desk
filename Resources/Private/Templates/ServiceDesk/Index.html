@@ -1,0 +1,67 @@
+<f:layout name="Default" />
+
+<f:section name="content">
+
+	<div class="container container-small">
+		<h1>{serviceDesk.body.projectName} <small>{serviceDesk.body.projectKey}</small></h1>
+		<p class="lead" style="margin-bottom: 0;"><f:format.raw><f:translate key="label.welcome" extensionName="jira_service_desk" arguments="{0: serviceDesk.body.projectName}"/></f:format.raw></p>
+	</div>
+
+	<hr>
+
+	<div class="container container-small">
+		<form name="searchForm" method="post">
+			<div class="form-control-clearable">
+				<input type="text" class="form-control" name="searchTerm" placeholder="{f:translate(key : 'searchForm.placeholder.howCanWeHelpYou', extensionName: 'jira_service_desk')}" autofocus>
+				<button type="button" class="close clearSearchForm" tabindex="-1" aria-hidden="true" onclick="TYPO3.ServiceDesk.clearFilter(); return false;">
+					<core:icon identifier="actions-close" size="small" />
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<hr>
+
+	<div class="container container-small">
+		<div class="row" id="requestTypesNavigation">
+			<div class="col-xs-4">
+				<ul class="nav nav-pills nav-stacked">
+					<f:for each="{requestTypeGroups.body.values}" as="requestTypeGroup" iteration="requestTypeGroupIteration">
+						<li role="presentation" class="{f:if(condition: requestTypeGroupIteration.isFirst, then: 'active')}">
+							<a href="#requestTypeGroup-{requestTypeGroup.id}" aria-controls="requestTypeGroup-{requestTypeGroup.id}" role="tab" data-toggle="tab">{requestTypeGroup.name}</a>
+						</li>
+					</f:for>
+				</ul>
+			</div>
+			<div class="col-xs-8">
+				<div class="tab-content">
+					<f:for each="{requestTypeGroups.body.values}" as="requestTypeGroup" iteration="requestTypeGroupIteration">
+						<div role="tabpanel" class="tab-pane fade in {f:if(condition: requestTypeGroupIteration.isFirst, then: 'active')}" id="requestTypeGroup-{requestTypeGroup.id}">
+							<ul class="media-list">
+								<f:for each="{requestTypeGroup.requestTypes}" as="requestType">
+									<li class="media">
+										<f:link.action action="new" controller="ServiceDesk" arguments="{requestTypeId: requestType.id}">
+											<div class="media-left">
+												<img class="media-object" src="{requestType.icon._links.iconUrls.32x32}" alt="" width="32" height="32">
+											</div>
+											<div class="media-body">
+												<h4 class="media-heading">{requestType.name}</h4>
+												<p>{requestType.description}</p>
+												<p><small>{requestType.helpText}</small></p>
+											</div>
+										</f:link.action>
+									</li>
+								</f:for>
+							</ul>
+						</div>
+					</f:for>
+				</div>
+			</div>
+		</div>
+		<div id="requestTypesResultList">
+			<ul class="media-list"></ul>
+			<p class="lead"><a href="#" onclick="TYPO3.ServiceDesk.clearFilter(); return false;"><f:translate key="label.nothingFound" extensionName="jira_service_desk"/></a></p>
+		</div>
+	</div>
+
+</f:section>

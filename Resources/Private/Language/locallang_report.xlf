@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" product-name="jira_service_desk">
+		<header/>
+		<body>
+			<trans-unit id="report.check.serviceDeskUrl.title">
+				<source>Jira Service Desk URL</source>
+			</trans-unit>
+			<trans-unit id="report.check.serviceDeskUrl.description">
+				<source>Please check the settings for the Service Desk URL.</source>
+			</trans-unit>
+			<trans-unit id="report.check.serviceDeskId.title">
+				<source>Jira Service Desk ID</source>
+			</trans-unit>
+			<trans-unit id="report.check.serviceDeskId.description">
+				<source>Please check the settings for the Service Desk ID.</source>
+			</trans-unit>
+			<trans-unit id="report.check.serviceDeskAvailability.title">
+				<source>Jira Service Desk availability</source>
+			</trans-unit>
+			<trans-unit id="report.check.serviceDeskAvailability.description">
+				<source>The Service Desk is currently not available. Please contact your administrator.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

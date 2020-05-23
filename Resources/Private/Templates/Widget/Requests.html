@@ -1,0 +1,41 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Widget/Widget" />
+<f:section name="main">
+	<div class="widget-table-wrapper">
+		<f:if condition="{requests.values}">
+			<f:then>
+				<table class="widget-table">
+					<tr>
+						<th> </th>
+						<th><f:translate key="label.requestType" extensionName="jira_service_desk"/></th>
+						<th><f:translate key="label.reference" extensionName="jira_service_desk"/></th>
+						<th><f:translate key="label.summary" extensionName="jira_service_desk"/></th>
+						<th><f:translate key="label.status" extensionName="jira_service_desk"/></th>
+						<th><f:translate key="label.reporter" extensionName="jira_service_desk"/></th>
+					</tr>
+					<tbody>
+					<f:for each="{requests.values}" as="request" iteration="requestIteration">
+						<tr>
+							<td><img src="{request.requestType.icon._links.iconUrls.16x16}" alt="{request.requestType.name}" width="16" height="16"></td>
+							<td>{request.requestType.name}</td>
+							<td><a href="{be:moduleLink(route: 'help_JiraServiceDeskJira', arguments: {tx_jiraservicedesk_help_jiraservicedeskjira: {action: 'show', issueId: request.issueId, issueKey: request.issueKey}})}">{request.issueKey}</a></td>
+							<td><a href="{be:moduleLink(route: 'help_JiraServiceDeskJira', arguments: {tx_jiraservicedesk_help_jiraservicedeskjira: {action: 'show', issueId: request.issueId, issueKey: request.issueKey}})}"><f:for each="{request.requestFieldValues}" as="requestFieldValue"><f:switch expression="{requestFieldValue.fieldId}"><f:case value="summary">{requestFieldValue.value}</f:case></f:switch></f:for></a></td>
+							<td><span class="label {f:if(condition: '{request.currentStatus.status} == \'Offen\'', then: ' label-default')}{f:if(condition: '{request.currentStatus.status} == \'Laufende Arbeiten\'', then: ' label-warning')}{f:if(condition: '{request.currentStatus.status} == \'Wartet auf Kunden\'', then: ' label-danger')}{f:if(condition: '{request.currentStatus.status} == \'Fertig\'', then: ' label-success')}">{request.currentStatus.status}</span></td>
+							<td><img src="{request.reporter._links.avatarUrls.32x32}" alt="{request.reporter.displayName}" width="24" height="24"> {request.reporter.displayName}</td>
+						</tr>
+					</f:for>
+					</tbody>
+				</table>
+			</f:then>
+			<f:else>
+				<p><strong><f:translate key="label.noRequests.title" extensionName="jira_service_desk"/></strong></p>
+				<p><f:format.raw><f:translate key="label.noRequests.message" extensionName="jira_service_desk" arguments="{0: '{f:uri.action(action: \'index\', controller: \'ServiceDesk\')}'}"/></f:format.raw></p>
+			</f:else>
+		</f:if>
+	</div>
+</f:section>
+<f:section name="footer">
+	<f:render partial="Widget/Button" arguments="{button: button}"/>
+</f:section>
+</html>
+

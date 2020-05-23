@@ -1,0 +1,56 @@
+{namespace jira=Walther\JiraServiceDesk\ViewHelpers}
+
+<f:layout name="Default" />
+
+<f:section name="content">
+
+	<div class="container container-small">
+
+		<h1><f:translate key="label.requests" extensionName="jira_service_desk" /></h1>
+
+		<f:render partial="RequestsFilter" arguments="{_all}"/>
+
+		<f:if condition="{customerRequests.body.size}">
+			<f:then>
+
+				<table class="table request-table">
+					<tr>
+						<th> </th>
+						<th><f:translate key="label.requestType" extensionName="jira_service_desk"/></th>
+						<th><f:translate key="label.reference" extensionName="jira_service_desk"/></th>
+						<th><f:translate key="label.summary" extensionName="jira_service_desk"/></th>
+						<th><f:translate key="label.status" extensionName="jira_service_desk"/></th>
+						<th><f:translate key="label.reporter" extensionName="jira_service_desk"/></th>
+					</tr>
+					<tbody>
+						<f:for each="{customerRequests.body.values}" as="request" iteration="requestIteration">
+							<tr>
+								<td><span class="image"><img src="{request.requestType.icon._links.iconUrls.16x16}" alt="{request.requestType.name}" width="16" height="16"></span></td>
+								<td>{request.requestType.name}</td>
+								<td><f:link.action action="show" controller="ServiceDesk" arguments="{issueId: request.issueId, issueKey: request.issueKey}">{request.issueKey}</f:link.action></td>
+								<td><f:link.action action="show" controller="ServiceDesk" arguments="{issueId: request.issueId, issueKey: request.issueKey}"><f:for each="{request.requestFieldValues}" as="requestFieldValue"><f:switch expression="{requestFieldValue.fieldId}"><f:case value="summary">{requestFieldValue.value}</f:case></f:switch></f:for></f:link.action></td>
+								<td><span class="label {f:if(condition: '{request.currentStatus.status} == \'Offen\'', then: ' label-default')}{f:if(condition: '{request.currentStatus.status} == \'Laufende Arbeiten\'', then: ' label-warning')}{f:if(condition: '{request.currentStatus.status} == \'Wartet auf Kunden\'', then: ' label-danger')}{f:if(condition: '{request.currentStatus.status} == \'Fertig\'', then: ' label-success')}">{request.currentStatus.status}</span></td>
+								<td><img src="{request.reporter._links.avatarUrls.32x32}" alt="{request.reporter.displayName}" width="24" height="24"> {request.reporter.displayName}</td>
+							</tr>
+						</f:for>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="6">{customerRequests.body.size} <f:translate key="label.requests" extensionName="jira_service_desk" /></td>
+						</tr>
+					</tfoot>
+				</table>
+				<jira:be.widget.paginate configuration="{currentPage: page, itemsPerPage: limit, maxItems: customerRequests.body.size}" />
+
+			</f:then>
+			<f:else>
+
+				<h3><f:translate key="label.noRequests.title" extensionName="jira_service_desk"/></h3>
+				<p><f:format.raw><f:translate key="label.noRequests.message" extensionName="jira_service_desk" arguments="{0: '{f:uri.action(action: \'index\', controller: \'ServiceDesk\')}'}"/></f:format.raw></p>
+
+			</f:else>
+		</f:if>
+
+	</div>
+
+</f:section>

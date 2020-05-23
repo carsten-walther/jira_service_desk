@@ -1,0 +1,98 @@
+# Configuration/Services.yaml
+services:
+
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Walther\JiraServiceDesk\:
+    resource: '../Classes/*'
+    exclude: '../Classes/Widgets/*'
+
+  Walther\JiraServiceDesk\Widgets\:
+    resource: '../Classes/Widgets/*'
+
+  cache.dashboard.jira_service_desk:
+    class: 'TYPO3\CMS\Core\Cache\Frontend\FrontendInterface'
+    factory: ['@TYPO3\CMS\Core\Cache\CacheManager', 'getCache']
+    arguments:
+      $identifier: 'jira_service_desk'
+
+  dashboard.buttons.serviceDeskButton:
+    class: 'Walther\JiraServiceDesk\Widgets\Provider\ButtonProvider'
+    arguments:
+      $title: 'LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:widgets.buttons.serviceDesk'
+      $action: 'index'
+
+  dashboard.buttons.requestsButton:
+    class: 'Walther\JiraServiceDesk\Widgets\Provider\ButtonProvider'
+    arguments:
+      $title: 'LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:widgets.buttons.requests'
+      $action: 'list'
+
+  dashboard.widget.jiraservicedesk.information:
+    class: 'Walther\JiraServiceDesk\Widgets\InformationWidget'
+    arguments:
+      $dataProvider: '@Walther\JiraServiceDesk\Widgets\Provider\InformationWidgetDataProvider'
+      $view: '@dashboard.views.widget'
+      $cache: '@cache.dashboard.jira_service_desk'
+      $buttonProvider: '@dashboard.buttons.serviceDeskButton'
+    tags:
+      - name: dashboard.widget
+        identifier: 'jiraServiceDesk_InformationWidget'
+        groupNames: 'jiraservicedesk'
+        title: 'LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:widgets.information.title'
+        description: 'LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:widgets.information.description'
+        iconIdentifier: 'apps-toolbar-menu-service-desk'
+        height: 'medium'
+        width: 'medium'
+
+  dashboard.widget.jiraservicedesk.status:
+    class: 'Walther\JiraServiceDesk\Widgets\StatusGraphWidget'
+    arguments:
+      $dataProvider: '@Walther\JiraServiceDesk\Widgets\Provider\StatusGraphWidgetDataProvider'
+      $view: '@dashboard.views.widget'
+      $cache: '@cache.dashboard.jira_service_desk'
+    tags:
+      - name: dashboard.widget
+        identifier: 'jiraServiceDesk_StatusWidget'
+        groupNames: 'jiraservicedesk'
+        title: 'LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:widgets.status.title'
+        description: 'LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:widgets.status.description'
+        iconIdentifier: 'apps-toolbar-menu-service-desk'
+        height: 'medium'
+        width: 'small'
+
+  dashboard.widget.jiraservicedesk.type:
+    class: 'Walther\JiraServiceDesk\Widgets\TypeGraphWidget'
+    arguments:
+      $dataProvider: '@Walther\JiraServiceDesk\Widgets\Provider\TypeGraphWidgetDataProvider'
+      $view: '@dashboard.views.widget'
+      $cache: '@cache.dashboard.jira_service_desk'
+    tags:
+      - name: dashboard.widget
+        identifier: 'jiraServiceDesk_TypeGraphWidget'
+        groupNames: 'jiraservicedesk'
+        title: 'LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:widgets.type.title'
+        description: 'LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:widgets.type.description'
+        iconIdentifier: 'apps-toolbar-menu-service-desk'
+        height: 'medium'
+        width: 'small'
+
+  dashboard.widget.jiraservicedesk.requests:
+    class: 'Walther\JiraServiceDesk\Widgets\RequestsWidget'
+    arguments:
+      $dataProvider: '@Walther\JiraServiceDesk\Widgets\Provider\RequestsWidgetDataProvider'
+      $view: '@dashboard.views.widget'
+      $cache: '@cache.dashboard.jira_service_desk'
+      $buttonProvider: '@dashboard.buttons.requestsButton'
+    tags:
+      - name: dashboard.widget
+        identifier: 'jiraServiceDesk_RequestsWidget'
+        groupNames: 'jiraservicedesk'
+        title: 'LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:widgets.requests.title'
+        description: 'LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:widgets.requests.description'
+        iconIdentifier: 'apps-toolbar-menu-service-desk'
+        height: 'medium'
+        width: 'large'

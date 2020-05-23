@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" product-name="jira_service_desk">
+		<header/>
+		<body>
+            <trans-unit id="be_users.tab">
+                <source>Service Desk Settings</source>
+            </trans-unit>
+            <trans-unit id="be_users.field.serviceDeskUsername">
+                <source>Username</source>
+            </trans-unit>
+			<trans-unit id="be_users.field.serviceDeskPassword">
+				<source>Password</source>
+			</trans-unit>
+        </body>
+    </file>
+</xliff>

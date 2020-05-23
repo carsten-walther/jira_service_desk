@@ -1,0 +1,53 @@
+<f:form action="create" controller="ServiceDesk" name="newRequest" method="POST" enctype="multipart/form-data" arguments="{requestType: requestType}">
+	<f:for each="{requestTypeFields.body.requestTypeFields}" as="requestTypeField">
+		<div class="form-group">
+			<f:switch expression="{requestTypeField.jiraSchema.system}">
+				<f:case value="summary">
+					<label for="{requestTypeField.fieldId}">{requestTypeField.name} {f:if(condition: requestTypeField.required, then: '*')}</label>
+					<f:form.textfield class="form-control t3js-clearable hasDefaultValue" id="{requestTypeField.fieldId}" property="{requestTypeField.fieldId}" maxlength="255" required="{f:if(condition: requestTypeField.required, then: 'TRUE', else: 'FALSE')}"/>
+				</f:case>
+				<f:case value="components">
+					<label for="{requestTypeField.fieldId}">{requestTypeField.name} {f:if(condition: requestTypeField.required, then: '*')}</label>
+					<f:form.select class="form-control form-control-adapt" id="{requestTypeField.fieldId}" property="{requestTypeField.fieldId}" multiple="TRUE" required="{f:if(condition: requestTypeField.required, then: 'TRUE', else: 'FALSE')}">
+						<f:for each="{requestTypeField.validValues}" as="validValue">
+							<f:form.select.option value="{validValue.value}">{validValue.label}</f:form.select.option>
+						</f:for>
+					</f:form.select>
+				</f:case>
+				<f:case value="priority">
+					<label for="{requestTypeField.fieldId}">{requestTypeField.name} {f:if(condition: requestTypeField.required, then: '*')}</label>
+					<f:form.select class="form-control form-control-adapt" id="{requestTypeField.fieldId}" property="{requestTypeField.fieldId}" required="{f:if(condition: requestTypeField.required, then: 'TRUE', else: 'FALSE')}">
+						<f:for each="{requestTypeField.validValues}" as="validValue">
+							<f:form.select.option value="{validValue.value}" selected="{f:if(condition: '{validValue.value} == 3', then: 'TRUE', else: 'FALSE')}">{validValue.label}</f:form.select.option>
+						</f:for>
+					</f:form.select>
+				</f:case>
+				<f:case value="description">
+					<label for="{requestTypeField.fieldId}">{requestTypeField.name} {f:if(condition: requestTypeField.required, then: '*')}</label>
+					<f:form.textarea class="form-control t3js-clearable hasDefaultValue" id="{requestTypeField.fieldId}" property="{requestTypeField.fieldId}" rows="4" required="{f:if(condition: requestTypeField.required, then: 'TRUE', else: 'FALSE')}"/>
+				</f:case>
+				<f:case value="attachment">
+					<label for="{requestTypeField.fieldId}">{requestTypeField.name} {f:if(condition: requestTypeField.required, then: '*')}</label>
+					<span class="btn btn-default btn-file btn-block">
+						<f:form.upload multiple="multiple" id="{requestTypeField.fieldId}" property="{requestTypeField.fieldId}"/>
+					</span>
+					<span class="help-block"><f:translate key="label.max.size" extensionName="jira_service_desk" arguments="{0: '{f:format.bytes(value: 52428800)}'}"/></span>
+				</f:case>
+				<f:case value="duedate">
+					<label for="{requestTypeField.fieldId}">{requestTypeField.name} {f:if(condition: requestTypeField.required, then: '*')}</label>
+					<f:form.textfield type="date" class="form-control t3js-clearable hasDefaultValue" id="{requestTypeField.fieldId}" property="{requestTypeField.fieldId}" maxlength="255" required="{f:if(condition: requestTypeField.required, then: 'TRUE', else: 'FALSE')}"/>
+				</f:case>
+				<f:defaultCase>
+					<!-- none -->
+				</f:defaultCase>
+			</f:switch>
+			<f:if condition="{requestTypeField.description}">
+				<span class="help-block">{requestTypeField.description}</span>
+			</f:if>
+		</div>
+	</f:for>
+	<input type="hidden" property="requestTypeId" value="{requestType.id}">
+	<div class="form-group">
+		<f:form.submit value="{f:translate(key: 'button.submit', extensionName: 'jira_service_desk')}" class="btn btn-default"/>
+	</div>
+</f:form>

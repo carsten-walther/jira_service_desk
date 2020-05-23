@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" product-name="jira_service_desk">
+		<header/>
+		<body>
+
+			<!-- widget groups / presets -->
+
+			<trans-unit id="widgetGroups.jiraservicedesk">
+				<source>Jira Service Desk</source>
+			</trans-unit>
+
+			<trans-unit id="dashboardPresets.jiraservicedesk.title">
+				<source>Jira Service Desk</source>
+			</trans-unit>
+			<trans-unit id="dashboardPresets.jiraservicedesk.description">
+				<source>Jira Service Desk Overview.</source>
+			</trans-unit>
+
+			<!-- widgets -->
+
+			<trans-unit id="widgets.information.title">
+				<source>Service Desk Information</source>
+			</trans-unit>
+			<trans-unit id="widgets.information.description">
+				<source>Get information of your Service Desk.</source>
+			</trans-unit>
+			<trans-unit id="widgets.information.label.projectName">
+				<source>Project Name</source>
+			</trans-unit>
+			<trans-unit id="widgets.information.label.projectKey">
+				<source>Project Key</source>
+			</trans-unit>
+			<trans-unit id="widgets.information.label.projectId">
+				<source>Project ID</source>
+			</trans-unit>
+
+			<trans-unit id="widgets.status.title">
+				<source>Status</source>
+			</trans-unit>
+			<trans-unit id="widgets.status.description">
+				<source>Overview of your Service Desk Issues states as graph.</source>
+			</trans-unit>
+
+			<trans-unit id="widgets.type.title">
+				<source>Types</source>
+			</trans-unit>
+			<trans-unit id="widgets.type.description">
+				<source>Overview of your Service Desk Issues types as graph.</source>
+			</trans-unit>
+
+			<trans-unit id="widgets.requests.title">
+				<source>Requests</source>
+			</trans-unit>
+			<trans-unit id="widgets.requests.description">
+				<source>Keep track of your Service Desk requests.</source>
+			</trans-unit>
+
+			<trans-unit id="widgets.buttons.serviceDesk">
+				<source>Jira Service Desk</source>
+			</trans-unit>
+			<trans-unit id="widgets.buttons.requests">
+				<source>Requests</source>
+			</trans-unit>
+
+			<!-- toolbar -->
+
+			<trans-unit id="toolbarItem">
+				<source>Jira Service Desk</source>
+			</trans-unit>
+
+			<trans-unit id="toolbarItem.serviceDesk.index.title">
+				<source>Service Desk</source>
+			</trans-unit>
+			<trans-unit id="toolbarItem.serviceDesk.index.description">
+				<source>Get help from your Service Desk.</source>
+			</trans-unit>
+
+			<trans-unit id="toolbarItem.serviceDesk.requests.title">
+				<source>Requests</source>
+			</trans-unit>
+			<trans-unit id="toolbarItem.serviceDesk.requests.description">
+				<source>Get an overview of your requests.</source>
+			</trans-unit>
+
+			<trans-unit id="toolbarItem.serviceDesk.help.title">
+				<source>Help</source>
+			</trans-unit>
+			<trans-unit id="toolbarItem.serviceDesk.help.description">
+				<source>Learn how to use your Service Desk.</source>
+			</trans-unit>
+
+			<trans-unit id="toolbarItem.serviceDesk.projectId">
+				<source>Project ID</source>
+			</trans-unit>
+			<trans-unit id="toolbarItem.serviceDesk.projectName">
+				<source>Project Name</source>
+			</trans-unit>
+			<trans-unit id="toolbarItem.serviceDesk.projectKey">
+				<source>Project Key</source>
+			</trans-unit>
+
+			<trans-unit id="toolbarItem.requests.count">
+				<source><![CDATA[You have <span class="jira-service-desk-counter-in-text">%s</span> request(s) in your Service Desk.]]></source>
+			</trans-unit>
+
+			<!-- Menus -->
+
+			<trans-unit id="serviceDesk.menu.serviceDesk.title">
+				<source>Service Desk</source>
+			</trans-unit>
+			<trans-unit id="serviceDesk.menu.requests.title">
+				<source>Requests</source>
+			</trans-unit>
+			<trans-unit id="serviceDesk.menu.help.title">
+				<source>Help</source>
+			</trans-unit>
+
+			<!-- Servicedesk Form -->
+
+			<trans-unit id="label.welcome">
+				<source><![CDATA[Welcome, You can select a <strong>%s</strong> request from the options provided.]]></source>
+			</trans-unit>
+			<trans-unit id="searchForm.placeholder.howCanWeHelpYou">
+				<source>What can we help you with?</source>
+			</trans-unit>
+			<trans-unit id="label.nothingFound">
+				<source>Didn't find the right one?</source>
+			</trans-unit>
+
+			<trans-unit id="label.max.size">
+				<source>Allowed file size max. %s</source>
+			</trans-unit>
+
+			<!-- Buttons -->
+
+			<trans-unit id="button.submit">
+				<source>Submit</source>
+			</trans-unit>
+			<trans-unit id="button.cancel">
+				<source>Cancel</source>
+			</trans-unit>
+			<trans-unit id="button.closeTicket">
+				<source>Close Ticket</source>
+			</trans-unit>
+			<trans-unit id="button.details">
+				<source>Show details</source>
+			</trans-unit>
+
+			<!-- Notifications -->
+
+			<trans-unit id="createAttachment.error.title">
+				<source>Error</source>
+			</trans-unit>
+			<trans-unit id="createAttachment.error.description">
+				<source>The attachment could not be added to the request.</source>
+			</trans-unit>
+
+			<trans-unit id="createCustomerRequest.success.title">
+				<source>Success</source>
+			</trans-unit>
+			<trans-unit id="createCustomerRequest.success.description">
+				<source>Customer request successfully created.</source>
+			</trans-unit>
+			<trans-unit id="createCustomerRequest.error.title">
+				<source>Error</source>
+			</trans-unit>
+			<trans-unit id="createCustomerRequest.error.description">
+				<source>Customer request could not be created.</source>
+			</trans-unit>
+
+			<trans-unit id="createRequestComment.success.title">
+				<source>Success</source>
+			</trans-unit>
+			<trans-unit id="createRequestComment.success.description">
+				<source>Request comment successfully created.</source>
+			</trans-unit>
+			<trans-unit id="createRequestComment.error.title">
+				<source>Error</source>
+			</trans-unit>
+			<trans-unit id="createRequestComment.error.description">
+				<source>Request comment could not be created.</source>
+			</trans-unit>
+
+			<trans-unit id="performCustomerTransition.success.title">
+				<source>Success</source>
+			</trans-unit>
+			<trans-unit id="performCustomerTransition.success.description">
+				<source>Request transition performed successfully.</source>
+			</trans-unit>
+			<trans-unit id="performCustomerTransition.error.title">
+				<source>Error</source>
+			</trans-unit>
+			<trans-unit id="performCustomerTransition.error.description">
+				<source>Request transition could not be performed.</source>
+			</trans-unit>
+
+			<!-- Requests Table -->
+
+			<trans-unit id="label.noRequests.title">
+				<source>No requests were found.</source>
+			</trans-unit>
+			<trans-unit id="label.noRequests.message">
+				<source><![CDATA[Try to change your search criteria or <a href="%s">create a query</a>.]]></source>
+			</trans-unit>
+			<trans-unit id="label.requests">
+				<source>Requests</source>
+			</trans-unit>
+			<trans-unit id="label.requestType">
+				<source>Type</source>
+			</trans-unit>
+			<trans-unit id="label.requestType.all">
+				<source>Every request type</source>
+			</trans-unit>
+			<trans-unit id="label.reference">
+				<source>Reference</source>
+			</trans-unit>
+			<trans-unit id="label.summary">
+				<source>Summary</source>
+			</trans-unit>
+			<trans-unit id="label.serviceDesk">
+				<source>Service Desk</source>
+			</trans-unit>
+			<trans-unit id="label.status">
+				<source>Status</source>
+			</trans-unit>
+			<trans-unit id="label.reporter">
+				<source>Reporter</source>
+			</trans-unit>
+
+			<trans-unit id="label.requestStatus">
+				<source>Status</source>
+			</trans-unit>
+			<trans-unit id="label.requestStatus.CLOSED_REQUESTS">
+				<source>Closed requests</source>
+			</trans-unit>
+			<trans-unit id="label.requestStatus.OPEN_REQUESTS">
+				<source>Open requests</source>
+			</trans-unit>
+			<trans-unit id="label.requestStatus.ALL_REQUESTS">
+				<source>All requests</source>
+			</trans-unit>
+
+			<trans-unit id="label.requestOwnership.someone">
+				<source>Created by someone else</source>
+			</trans-unit>
+			<trans-unit id="label.requestOwnership.OWNED_REQUESTS">
+				<source>Requests created by me</source>
+			</trans-unit>
+			<trans-unit id="label.requestOwnership.PARTICIPATED_REQUESTS">
+				<source>Requests where I am a participant</source>
+			</trans-unit>
+			<trans-unit id="label.requestOwnership.ORGANIZATION">
+				<source>Requests created by my organization</source>
+			</trans-unit>
+			<trans-unit id="label.requestOwnership.ALL_ORGANIZATIONS">
+				<source>Requests of all organizations</source>
+			</trans-unit>
+			<trans-unit id="label.requestOwnership.APPROVER">
+				<source>Requests where I am an approver</source>
+			</trans-unit>
+			<trans-unit id="label.requestOwnership.ALL_REQUESTS">
+				<source>All requests</source>
+			</trans-unit>
+
+			<trans-unit id="label.durationUntilSolution">
+				<source>Duration until solution</source>
+			</trans-unit>
+			<trans-unit id="label.durationUntilFirstResponse">
+				<source>Duration until first response</source>
+			</trans-unit>
+
+			<trans-unit id="label.searchTerm">
+				<source>Search for</source>
+			</trans-unit>
+			<trans-unit id="label.setFilter">
+				<source>Filter</source>
+			</trans-unit>
+			<trans-unit id="label.comment">
+				<source>Comment</source>
+			</trans-unit>
+			<trans-unit id="label.comment">
+				<source>Please comment with additional information</source>
+			</trans-unit>
+
+			<trans-unit id="modal.requestComments">
+				<source>Request comments</source>
+			</trans-unit>
+
+			<trans-unit id="modal.performCustomerTransition">
+				<source>Perform transition</source>
+			</trans-unit>
+
+			<trans-unit id="modal.addRequestComment">
+				<source>Add request comment</source>
+			</trans-unit>
+
+			<!-- Comments & Activities -->
+
+			<trans-unit id="label.attachment">
+				<source>Attachment</source>
+			</trans-unit>
+
+			<trans-unit id="label.details">
+				<source>Details</source>
+			</trans-unit>
+			<trans-unit id="label.activities">
+				<source>Activities</source>
+			</trans-unit>
+			<trans-unit id="label.newest">
+				<source>Newest</source>
+			</trans-unit>
+			<trans-unit id="label.activityChangedTo">
+				<source><![CDATA[The request status was changed to <strong>%s</strong>.]]></source>
+			</trans-unit>
+			<trans-unit id="label.addCommentToRequest">
+				<source>Add a comment to this request</source>
+			</trans-unit>
+			<trans-unit id="label.addCommentToTransition">
+				<source>Add a comment to this transition</source>
+			</trans-unit>
+			<trans-unit id="label.sharedWith">
+				<source>Shared with</source>
+			</trans-unit>
+			<trans-unit id="label.shareAction">
+				<source>Share</source>
+			</trans-unit>
+			<trans-unit id="label.unsubscribeAction">
+				<source>Unsubscribe</source>
+			</trans-unit>
+			<trans-unit id="label.subscribeAction">
+				<source>Subscribe</source>
+			</trans-unit>
+			<trans-unit id="label.back">
+				<source>Back</source>
+			</trans-unit>
+			<trans-unit id="label.reload">
+				<source>Reload</source>
+			</trans-unit>
+
+			<trans-unit id="message.noAccess">
+				<source><![CDATA[You do not have access to the Service Desk. There can be several reasons for this: <ul><li>You do not have a service contract.</li><li>The configuration of the Service Desk is not complete.</li><li>Your user access is incorrect.</li></ul>Please contact your administrator for assistance.]]></source>
+			</trans-unit>
+
+		</body>
+	</file>
+</xliff>

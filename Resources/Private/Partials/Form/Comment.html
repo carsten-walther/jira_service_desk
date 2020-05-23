@@ -1,0 +1,19 @@
+<f:form action="addComment" controller="ServiceDesk" name="comment" method="POST" enctype="multipart/form-data">
+	<div class="form-group">
+		<label for="comment" class="hidden"><f:translate key="label.comment" extensionName="jira_service_desk" /></label>
+		<f:form.textarea class="form-control t3js-clearable hasDefaultValue" id="comment" property="comment" rows="6" placeholder="{f:translate(key: 'label.addCommentToRequest', extensionName: 'jira_service_desk')}" required="TRUE"/>
+	</div>
+	<f:comment>
+	<div class="form-group">
+		<label for="attachment"><f:translate key="label.attachment" extensionName="jira_service_desk" /></label>
+		<span class="btn btn-default btn-file btn-block">
+			<f:form.upload multiple="multiple" id="attachment" property="attachment"/>
+		</span>
+		<span class="help-block"><f:translate key="label.max.size" extensionName="jira_service_desk" arguments="{0: '{f:format.bytes(value: 52428800)}'}"/></span>
+	</div>
+	</f:comment>
+	<f:form.hidden property="requestId" value="{customerRequest.body.issueId}" />
+	<div class="form-group">
+		<f:form.submit value="{f:translate(key: 'button.submit', extensionName: 'jira_service_desk')}" class="btn btn-default"/>
+	</div>
+</f:form>

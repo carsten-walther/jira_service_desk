@@ -1,0 +1,55 @@
+<f:form action="list" controller="ServiceDesk" name="filter" method="POST">
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="requestStatus"><f:translate key="label.requestStatus" extensionName="jira_service_desk"/></label>
+				<f:form.select property="requestStatus" id="requestStatus" class="form-control input-sm">
+					<f:form.select.option value="ALL_REQUESTS" selected="{f:if(condition: '{requestStatus} == \'ALL_REQUESTS\'', then: 'TRUE', else: 'FALSE')}"><f:translate key="label.requestStatus.ALL_REQUESTS" extensionName="jira_service_desk"/></f:form.select.option>
+					<f:form.select.option value="OPEN_REQUESTS" selected="{f:if(condition: '{requestStatus} == \'OPEN_REQUESTS\'', then: 'TRUE', else: 'FALSE')}"><f:translate key="label.requestStatus.OPEN_REQUESTS" extensionName="jira_service_desk"/></f:form.select.option>
+					<f:form.select.option value="CLOSED_REQUESTS" selected="{f:if(condition: '{requestStatus} == \'CLOSED_REQUESTS\'', then: 'TRUE', else: 'FALSE')}"><f:translate key="label.requestStatus.CLOSED_REQUESTS" extensionName="jira_service_desk"/></f:form.select.option>
+				</f:form.select>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="requestOwnership"><f:translate key="label.reporter" extensionName="jira_service_desk"/></label>
+				<f:form.select property="requestOwnership" id="requestOwnership" class="form-control input-sm">
+					<f:form.select.option value="ALL_REQUESTS" selected="{f:if(condition: '{requestTypeId} == {requestType.id}', then: 'TRUE', else: 'FALSE')}"><f:translate key="label.requestOwnership.someone" extensionName="jira_service_desk"/></f:form.select.option>
+					<f:form.select.option value="OWNED_REQUESTS" selected="{f:if(condition: '{requestOwnership} == \'OWNED_REQUESTS\'', then: 'TRUE', else: 'FALSE')}"><f:translate key="label.requestOwnership.OWNED_REQUESTS" extensionName="jira_service_desk"/></f:form.select.option>
+					<f:form.select.option value="PARTICIPATED_REQUESTS" selected="{f:if(condition: '{requestOwnership} == \'PARTICIPATED_REQUESTS\'', then: 'TRUE', else: 'FALSE')}"><f:translate key="label.requestOwnership.PARTICIPATED_REQUESTS" extensionName="jira_service_desk"/></f:form.select.option>
+					<f:comment>
+						<f:form.select.option value="ALL_ORGANIZATIONS" selected="{f:if(condition: '{requestOwnership} == \'ALL_ORGANIZATIONS\'', then: 'TRUE', else: 'FALSE')}"><f:translate key="label.requestOwnership.ALL_ORGANIZATIONS" extensionName="jira_service_desk"/></f:form.select.option>
+						<f:form.select.option value="ORGANIZATION" selected="{f:if(condition: '{requestOwnership} == \'ORGANIZATION\'', then: 'TRUE', else: 'FALSE')}"><f:translate key="label.requestOwnership.ORGANIZATION" extensionName="jira_service_desk"/></f:form.select.option>
+						<f:form.select.option value="APPROVER" selected="{f:if(condition: '{requestOwnership} == \'APPROVER\'', then: 'TRUE', else: 'FALSE')}"><f:translate key="label.requestOwnership.APPROVER" extensionName="jira_service_desk"/></f:form.select.option>
+						<f:form.select.option value="ALL_REQUESTS" selected="{f:if(condition: '{requestOwnership} == \'ALL_REQUESTS\'', then: 'TRUE', else: 'FALSE')}"><f:translate key="label.requestOwnership.ALL_REQUESTS" extensionName="jira_service_desk"/></f:form.select.option>
+					</f:comment>
+				</f:form.select>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="form-group">
+				<label for="requestTypeId"><f:translate key="label.requestType" extensionName="jira_service_desk"/></label>
+				<f:form.select property="requestTypeId" id="requestTypeId" class="form-control input-sm">
+					<f:form.select.option value="0" selected="{f:if(condition: '{requestTypeId} == {requestType.id}', then: 'TRUE', else: 'FALSE')}"><f:translate key="label.requestType.all" extensionName="jira_service_desk"/></f:form.select.option>
+					<f:for each="{requestTypes.body.values}" as="requestType">
+						<f:form.select.option value="{requestType.id}" selected="{f:if(condition: '{requestTypeId} == {requestType.id}', then: 'TRUE', else: 'FALSE')}">{requestType.name}</f:form.select.option>
+					</f:for>
+				</f:form.select>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-10">
+			<div class="form-group">
+				<label for="searchTerm"><f:translate key="label.searchTerm" extensionName="jira_service_desk"/></label>
+				<f:form.textfield property="searchTerm" id="searchTerm" class="form-control input-sm" value="{searchTerm}"/>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="form-group">
+				<label>&nbsp;</label>
+				<f:form.submit value="{f:translate(key: 'label.setFilter', extensionName: 'jira_service_desk')}" class="btn btn-default btn-sm btn-block" />
+			</div>
+		</div>
+	</div>
+</f:form>

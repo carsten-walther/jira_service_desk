@@ -1,0 +1,11 @@
+<f:form action="addTransition" controller="ServiceDesk" name="transition" method="POST" enctype="multipart/form-data">
+	<div class="form-group">
+		<label for="comment"><f:translate key="label.comment" extensionName="jira_service_desk" /></label>
+		<f:form.textarea class="form-control t3js-clearable hasDefaultValue" id="comment" property="comment" rows="4" placeholder="{f:translate(key: 'label.addCommentToRequest', extensionName: 'jira_service_desk')}"/>
+	</div>
+	<f:form.hidden property="requestId" value="{requestId}" />
+	<f:form.hidden property="transitionId" value="{transitionId}" />
+	<div class="form-group hidden">
+		<f:form.submit value="{f:translate(key: 'button.submit', extensionName: 'jira_service_desk')}" class="btn btn-default"/>
+	</div>
+</f:form>

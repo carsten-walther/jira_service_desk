@@ -1,0 +1,87 @@
+<html xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:be.pageRenderer includeRequireJsModules="{0: 'TYPO3/CMS/JiraServiceDesk/Toolbar/ServiceDeskMenu'}"/>
+<h3 class="dropdown-headline">{f:translate(key: 'toolbarItem', extensionName: 'jira_service_desk')}</h3>
+<hr>
+<div class="dropdown-table">
+	<div class="dropdown-table-row">
+		<a href="#" data-module="help_JiraServiceDeskJira" data-action="index" data-controller="ServiceDesk" class="jira-service-desk-modulelink">
+			<div class="dropdown-table-column dropdown-table-column-top dropdown-table-icon">
+				<core:icon identifier="apps-toolbar-menu-service-desk" size="small" alternativeMarkupIdentifier="inline"/>
+			</div>
+			<div class="dropdown-table-column dropdown-table-column-top dropdown-table-text">
+				<f:translate key="toolbarItem.serviceDesk.index.title" extensionName="jira_service_desk" />
+				<br>
+				<small class="text-muted"><f:translate key="toolbarItem.serviceDesk.index.description" extensionName="jira_service_desk" /></small>
+			</div>
+		</a>
+	</div>
+	<div class="dropdown-table-row">
+		<a href="#" data-module="help_JiraServiceDeskJira" data-action="list" data-controller="ServiceDesk" class="jira-service-desk-modulelink">
+			<div class="dropdown-table-column dropdown-table-column-top dropdown-table-icon">
+				<core:icon identifier="apps-toolbar-menu-systeminformation" size="small" alternativeMarkupIdentifier="inline"/>
+			</div>
+			<div class="dropdown-table-column dropdown-table-column-top dropdown-table-text">
+				<f:translate key="toolbarItem.serviceDesk.requests.title" extensionName="jira_service_desk" />
+				<br>
+				<small class="text-muted"><f:translate key="toolbarItem.serviceDesk.requests.description" extensionName="jira_service_desk" /></small>
+			</div>
+		</a>
+	</div>
+	<div class="dropdown-table-row">
+		<a href="#" data-module="help_JiraServiceDeskJira" data-action="help" data-controller="ServiceDesk" class="jira-service-desk-modulelink">
+			<div class="dropdown-table-column dropdown-table-column-top dropdown-table-icon">
+				<core:icon identifier="apps-toolbar-menu-help" size="small" alternativeMarkupIdentifier="inline"/>
+			</div>
+			<div class="dropdown-table-column dropdown-table-column-top dropdown-table-text">
+				<f:translate key="toolbarItem.serviceDesk.help.title" extensionName="jira_service_desk" />
+				<br>
+				<small class="text-muted"><f:translate key="toolbarItem.serviceDesk.help.description" extensionName="jira_service_desk" /></small>
+			</div>
+		</a>
+	</div>
+</div>
+<hr>
+<div class="dropdown-table">
+	<div class="dropdown-table-row">
+		<div class="dropdown-table-column dropdown-table-column-top dropdown-table-title">
+			<f:translate key="toolbarItem.serviceDesk.projectName" extensionName="jira_service_desk" />
+		</div>
+		<div class="dropdown-table-column dropdown-table-column-top dropdown-table-value ">
+			{serviceDesk.body.projectName}
+		</div>
+	</div>
+	<div class="dropdown-table-row">
+		<div class="dropdown-table-column dropdown-table-column-top dropdown-table-title">
+			<f:translate key="toolbarItem.serviceDesk.projectKey" extensionName="jira_service_desk" />
+		</div>
+		<div class="dropdown-table-column dropdown-table-column-top dropdown-table-value ">
+			{serviceDesk.body.projectKey}
+		</div>
+	</div>
+	<div class="dropdown-table-row">
+		<div class="dropdown-table-column dropdown-table-column-top dropdown-table-title">
+			<f:translate key="toolbarItem.serviceDesk.projectId" extensionName="jira_service_desk" />
+		</div>
+		<div class="dropdown-table-column dropdown-table-column-top dropdown-table-value ">
+			{serviceDesk.body.projectId}
+		</div>
+	</div>
+</div>
+<hr>
+<p class="dropdown-text text-muted"><f:format.raw><f:translate key="toolbarItem.requests.count" extensionName="jira_service_desk" arguments="{0: customerRequests}"/></f:format.raw></p>
+<f:if condition="{customerRequestCounts}">
+	<hr>
+	<div class="dropdown-table">
+		<f:for each="{customerRequestCounts}" as="count" key="name">
+			<div class="dropdown-table-row">
+				<div class="dropdown-table-column dropdown-table-column-top dropdown-table-title">
+					<span class="dropdown-text {f:if(condition: '{name} == \'Offen\'', then: ' text-default')}{f:if(condition: '{name} == \'Laufende Arbeiten\'', then: ' text-warning')}{f:if(condition: '{name} == \'Wartet auf Kunden\'', then: ' text-danger')}{f:if(condition: '{name} == \'Fertig\'', then: ' text-success')}">{name}</span>
+				</div>
+				<div class="dropdown-table-column dropdown-table-column-top dropdown-table-value ">
+					{count}
+				</div>
+			</div>
+		</f:for>
+	</div>
+</f:if>
+</html>
