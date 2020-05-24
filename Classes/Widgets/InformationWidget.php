@@ -5,7 +5,6 @@ namespace Walther\JiraServiceDesk\Widgets;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface as Cache;
 use TYPO3\CMS\Dashboard\Widgets\WidgetConfigurationInterface;
 use TYPO3\CMS\Dashboard\Widgets\WidgetInterface;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use Walther\JiraServiceDesk\Widgets\Provider\InformationWidgetDataProvider;
 

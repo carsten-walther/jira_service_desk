@@ -29,7 +29,7 @@
 								<td>{request.requestType.name}</td>
 								<td><f:link.action action="show" controller="ServiceDesk" arguments="{issueId: request.issueId, issueKey: request.issueKey}">{request.issueKey}</f:link.action></td>
 								<td><f:link.action action="show" controller="ServiceDesk" arguments="{issueId: request.issueId, issueKey: request.issueKey}"><f:for each="{request.requestFieldValues}" as="requestFieldValue"><f:switch expression="{requestFieldValue.fieldId}"><f:case value="summary">{requestFieldValue.value}</f:case></f:switch></f:for></f:link.action></td>
-								<td><span class="label {f:if(condition: '{request.currentStatus.status} == \'Offen\'', then: ' label-default')}{f:if(condition: '{request.currentStatus.status} == \'Laufende Arbeiten\'', then: ' label-warning')}{f:if(condition: '{request.currentStatus.status} == \'Wartet auf Kunden\'', then: ' label-danger')}{f:if(condition: '{request.currentStatus.status} == \'Fertig\'', then: ' label-success')}">{request.currentStatus.status}</span></td>
+								<td><span class="label {f:if(condition: '{request.currentStatus.status} == \'Offen\'', then: ' label-default')}{f:if(condition: '{request.currentStatus.status} == \'Wieder geöffnet\'', then: ' label-default')}{f:if(condition: '{request.currentStatus.status} == \'Laufende Arbeiten\'', then: ' label-warning')}{f:if(condition: '{request.currentStatus.status} == \'Wartet auf Kunden\'', then: ' label-danger')}{f:if(condition: '{request.currentStatus.status} == \'Fertig\'', then: ' label-success')}">{request.currentStatus.status}</span></td>
 								<td><img src="{request.reporter._links.avatarUrls.32x32}" alt="{request.reporter.displayName}" width="24" height="24"> {request.reporter.displayName}</td>
 							</tr>
 						</f:for>

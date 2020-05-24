@@ -5,6 +5,7 @@ namespace Walther\JiraServiceDesk\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface as Cache;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Http\JsonResponse;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -53,36 +54,14 @@ class AjaxController
     protected $knowledgebaseResource;
 
     /**
-     * @param \Walther\JiraServiceDesk\Service\Service $service
+     * @var Cache
      */
-    public function injectService(Service $service) : void
-    {
-        $this->service = $service;
-    }
+    private $cache;
 
     /**
-     * @param \Walther\JiraServiceDesk\Service\Resource\ServiceDesk $serviceDeskResource
+     * @var int
      */
-    public function injectServiceDeskResource(ServiceDesk $serviceDeskResource) : void
-    {
-        $this->serviceDeskResource = $serviceDeskResource;
-    }
-
-    /**
-     * @param \Walther\JiraServiceDesk\Service\Resource\Request $requestResource
-     */
-    public function injectRequestResource(Request $requestResource) : void
-    {
-        $this->requestResource = $requestResource;
-    }
-
-    /**
-     * @param \Walther\JiraServiceDesk\Service\Resource\Knowledgebase $knowledgebase
-     */
-    public function injectKnowledgebaseResource(\Walther\JiraServiceDesk\Service\Resource\Knowledgebase $knowledgebase) : void
-    {
-        $this->knowledgebaseResource = $knowledgebase;
-    }
+    private $lifeTime = 60 * 60 * 1;
 
     /**
      * AjaxController constructor.
@@ -116,6 +95,38 @@ class AjaxController
                 }
             }
         }
+    }
+
+    /**
+     * @param \Walther\JiraServiceDesk\Service\Service $service
+     */
+    public function injectService(Service $service) : void
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * @param \Walther\JiraServiceDesk\Service\Resource\ServiceDesk $serviceDeskResource
+     */
+    public function injectServiceDeskResource(ServiceDesk $serviceDeskResource) : void
+    {
+        $this->serviceDeskResource = $serviceDeskResource;
+    }
+
+    /**
+     * @param \Walther\JiraServiceDesk\Service\Resource\Request $requestResource
+     */
+    public function injectRequestResource(Request $requestResource) : void
+    {
+        $this->requestResource = $requestResource;
+    }
+
+    /**
+     * @param \Walther\JiraServiceDesk\Service\Resource\Knowledgebase $knowledgebase
+     */
+    public function injectKnowledgebaseResource(Knowledgebase $knowledgebase) : void
+    {
+        $this->knowledgebaseResource = $knowledgebase;
     }
 
     /**
@@ -178,7 +189,7 @@ class AjaxController
             // this is called by the serviceDesk action on input search strings
             case 'getRequestTypes':
                 // @todo We have to check if we can get access to knowledgebase articles, currently we get 404 errors. Maybe because of experimental api?
-                $data = $this->serviceDeskResource->getRequestTypes($serviceDeskId);
+                $data = $this->getRequestTypes($serviceDeskId);
                 if ($formData['searchTerm'] !== '') {
                     foreach ($data->body->values as $key => $value) {
                         if (stripos(strtolower($value->name), strtolower($formData['searchTerm'])) === false && stripos(strtolower($value->description), strtolower($formData['searchTerm'])) === false) {
@@ -214,5 +225,26 @@ class AjaxController
                 return new JsonResponse((array)$this->requestResource->performCustomerTransition($formData['transition[requestId]'], (int)$formData['transition[transitionId]'], $formData['transition[comment]']));
                 break;
         }
+    }
+
+    /**
+     * @param $serviceDeskId
+     * @param $expand
+     *
+     * @return mixed|\Walther\JiraServiceDesk\Service\Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function getRequestTypes($serviceDeskId, $expand = false)
+    {
+        $cacheHash = md5('getRequestTypes');
+
+        if ($items = $this->cache->get($cacheHash)) {
+            return $items;
+        }
+
+        $items = $this->serviceDeskResource->getRequestTypes($serviceDeskId, $expand);
+        $this->cache->set($cacheHash, $items, ['jira_service_desk'], $this->lifeTime);
+
+        return $items;
     }
 }

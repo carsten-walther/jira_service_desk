@@ -4,6 +4,7 @@ namespace Walther\JiraServiceDesk\Controller;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface as Cache;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
@@ -63,6 +64,26 @@ class ServiceDeskController extends ActionController
     protected $requesttypeResource;
 
     /**
+     * @var Cache
+     */
+    private $cache;
+
+    /**
+     * @var int
+     */
+    private $lifeTime = 60 * 60 * 1;
+
+    /**
+     * ServiceDeskController constructor.
+     *
+     * @param \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface $cache
+     */
+    public function __construct(Cache $cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
      * @param \Walther\JiraServiceDesk\Service\Service $service
      */
     public function injectService(Service $service) : void
@@ -95,6 +116,51 @@ class ServiceDeskController extends ActionController
     }
 
     /**
+     * @param \TYPO3\CMS\Extbase\Mvc\View\ViewInterface $view
+     *
+     * @return void
+     */
+    protected function initializeView(ViewInterface $view) : void
+    {
+        parent::initializeView($view);
+
+        $allowedActionMethods = ['indexAction', 'listAction', 'showAction', 'newAction', 'createAction', 'helpAction', 'accessDeniedAction'];
+
+        if (in_array($this->request->getArguments()['action'], $allowedActionMethods, false)) {
+            $this->view->getModuleTemplate()->setFlashMessageQueue($this->controllerContext->getFlashMessageQueue());
+        }
+
+        if ($this->view instanceof BackendTemplateView) {
+            $this->view->getModuleTemplate()->getPageRenderer()->addInlineLanguageLabelFile('EXT:jira_service_desk/Resources/Private/Language/locallang.xlf');
+            $this->view->getModuleTemplate()->getPageRenderer()->addCssFile('EXT:jira_service_desk/Resources/Public/Css/backend.css');
+            $this->view->getModuleTemplate()->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/JiraServiceDesk/Servicedesk');
+        }
+
+        $this->service = !$this->service ? GeneralUtility::makeInstance(Service::class) : $this->service;
+
+        if ($this->service->initialize()) {
+
+            if (!$this->serviceDeskResource) {
+                $this->serviceDeskResource = GeneralUtility::makeInstance(ServiceDesk::class, $this->service);
+            } else {
+                $this->serviceDeskResource->setService($this->service);
+            }
+
+            if (!$this->requestResource) {
+                $this->requestResource = GeneralUtility::makeInstance(Request::class, $this->service);
+            } else {
+                $this->requestResource->setService($this->service);
+            }
+
+            if (!$this->requesttypeResource) {
+                $this->requesttypeResource = GeneralUtility::makeInstance(Requesttype::class, $this->service);
+            } else {
+                $this->requesttypeResource->setService($this->service);
+            }
+        }
+    }
+
+    /**
      * This is the main service desk function an represents the service desk form.
      * With its search it is possible to search help topics in the linked helpdesk/confluence area.
      *
@@ -105,8 +171,9 @@ class ServiceDeskController extends ActionController
     {
         $serviceDeskId = (int)$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['jira_service_desk']['serviceDeskId'];
 
-        $requestTypeGroups = $this->serviceDeskResource->getRequestTypeGroup($serviceDeskId);
-        $requestTypes = $this->serviceDeskResource->getRequestTypes($serviceDeskId, true);
+        $requestTypeGroups = $this->getRequestTypeGroup($serviceDeskId);
+        $requestTypes = $this->getRequestTypes($serviceDeskId, true);
+        $serviceDesk = $this->getServiceDeskById($serviceDeskId);
 
         foreach ($requestTypeGroups->body->values as $requestTypeGroupKey => $requestTypeGroup) {
             foreach ($requestTypes->body->values as $requestType) {
@@ -120,7 +187,7 @@ class ServiceDeskController extends ActionController
         }
 
         $this->view->assignMultiple([
-            'serviceDesk' => $this->serviceDeskResource->getServiceDeskById($serviceDeskId),
+            'serviceDesk' => $serviceDesk,
             'requestTypeGroups' => $requestTypeGroups
         ]);
     }
@@ -149,7 +216,7 @@ class ServiceDeskController extends ActionController
         $limit = 10;
 
         $customerRequests = $this->requestResource->getCustomerRequests($serviceDeskId, (int)$requestTypeId, true, $searchTerm, $requestOwnership, $requestStatus, $approvalStatus, '', (int)$page, $limit);
-        $requestTypes = $this->serviceDeskResource->getRequestTypes($serviceDeskId, true);
+        $requestTypes = $this->getRequestTypes($serviceDeskId, true);
 
         $this->view->assignMultiple([
             'page' => $page,
@@ -189,9 +256,11 @@ class ServiceDeskController extends ActionController
 
         $customerRequest->body->status->values = $sortedActivities;
 
+        $transitions = $this->requestResource->getCustomerTransitions($arguments['issueId']);
+
         $this->view->assignMultiple([
             'customerRequest' => $customerRequest,
-            'transitions' => $this->requestResource->getCustomerTransitions($arguments['issueKey'])
+            'transitions' => $transitions
         ]);
     }
 
@@ -233,18 +302,8 @@ class ServiceDeskController extends ActionController
         }
 
         $this->redirect('show', 'ServiceDesk', null, [
-            'requestId' => $arguments['comment']['requestId']
+            'issueId' => $arguments['comment']['requestId']
         ]);
-    }
-
-    /**
-     * Returns LanguageService
-     *
-     * @return \TYPO3\CMS\Core\Localization\LanguageService
-     */
-    protected function getLanguageService() : LanguageService
-    {
-        return $GLOBALS['LANG'];
     }
 
     /**
@@ -285,7 +344,7 @@ class ServiceDeskController extends ActionController
         }
 
         $this->redirect('show', 'ServiceDesk', null, [
-            'requestId' => $arguments['transition']['requestId']
+            'issueId' => $arguments['transition']['requestId']
         ]);
     }
 
@@ -301,7 +360,8 @@ class ServiceDeskController extends ActionController
 
         $arguments = $this->request->getArguments();
 
-        $requestTypes = $this->serviceDeskResource->getRequestTypes($serviceDeskId, true);
+        $requestTypes = $this->getRequestTypes($serviceDeskId, true);
+        $serviceDesk = $this->getServiceDeskById($serviceDeskId);
 
         $requestType = [];
         foreach ($requestTypes->body->values as $value) {
@@ -310,10 +370,12 @@ class ServiceDeskController extends ActionController
             }
         }
 
+        $requestTypeFields = $this->serviceDeskResource->getRequestTypeFields($serviceDeskId, (int)$arguments['requestTypeId']);
+
         $this->view->assignMultiple([
-            'serviceDesk' => $this->serviceDeskResource->getServiceDeskById($serviceDeskId),
+            'serviceDesk' => $serviceDesk,
             'requestType' => $requestType,
-            'requestTypeFields' => $this->serviceDeskResource->getRequestTypeFields($serviceDeskId, (int)$arguments['requestTypeId']),
+            'requestTypeFields' => $requestTypeFields,
             'newCustomerRequest' => $arguments['newCustomerRequest']
         ]);
     }
@@ -455,47 +517,73 @@ class ServiceDeskController extends ActionController
     }
 
     /**
-     * @param \TYPO3\CMS\Extbase\Mvc\View\ViewInterface $view
+     * @param $serviceDeskId
      *
-     * @return void
+     * @return mixed|\Walther\JiraServiceDesk\Service\Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function initializeView(ViewInterface $view) : void
+    private function getRequestTypeGroup($serviceDeskId)
     {
-        parent::initializeView($view);
+        $cacheHash = md5('getRequestTypeGroup');
 
-        $allowedActionMethods = ['indexAction', 'listAction', 'showAction', 'newAction', 'createAction', 'helpAction', 'accessDeniedAction'];
-
-        if (in_array($this->request->getArguments()['action'], $allowedActionMethods, false)) {
-            $this->view->getModuleTemplate()->setFlashMessageQueue($this->controllerContext->getFlashMessageQueue());
+        if ($items = $this->cache->get($cacheHash)) {
+            return $items;
         }
 
-        if ($this->view instanceof BackendTemplateView) {
-            $this->view->getModuleTemplate()->getPageRenderer()->addInlineLanguageLabelFile('EXT:jira_service_desk/Resources/Private/Language/locallang.xlf');
-            $this->view->getModuleTemplate()->getPageRenderer()->addCssFile('EXT:jira_service_desk/Resources/Public/Css/backend.css');
-            $this->view->getModuleTemplate()->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/JiraServiceDesk/Servicedesk');
+        $items = $this->serviceDeskResource->getRequestTypeGroup($serviceDeskId);
+        $this->cache->set($cacheHash, $items, ['jira_service_desk'], $this->lifeTime);
+
+        return $items;
+    }
+
+    /**
+     * @param $serviceDeskId
+     * @param $expand
+     *
+     * @return mixed|\Walther\JiraServiceDesk\Service\Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function getRequestTypes($serviceDeskId, $expand)
+    {
+        $cacheHash = md5('getRequestTypes');
+
+        if ($items = $this->cache->get($cacheHash)) {
+            return $items;
         }
 
-        $this->service = !$this->service ? GeneralUtility::makeInstance(Service::class) : $this->service;
+        $items = $this->serviceDeskResource->getRequestTypes($serviceDeskId, $expand);
+        $this->cache->set($cacheHash, $items, ['jira_service_desk'], $this->lifeTime);
 
-        if ($this->service->initialize()) {
+        return $items;
+    }
 
-            if (!$this->serviceDeskResource) {
-                $this->serviceDeskResource = GeneralUtility::makeInstance(ServiceDesk::class, $this->service);
-            } else {
-                $this->serviceDeskResource->setService($this->service);
-            }
+    /**
+     * @param $serviceDeskId
+     *
+     * @return mixed|\Walther\JiraServiceDesk\Service\Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function getServiceDeskById($serviceDeskId)
+    {
+        $cacheHash = md5('getServiceDeskById');
 
-            if (!$this->requestResource) {
-                $this->requestResource = GeneralUtility::makeInstance(Request::class, $this->service);
-            } else {
-                $this->requestResource->setService($this->service);
-            }
-
-            if (!$this->requesttypeResource) {
-                $this->requesttypeResource = GeneralUtility::makeInstance(Requesttype::class, $this->service);
-            } else {
-                $this->requesttypeResource->setService($this->service);
-            }
+        if ($items = $this->cache->get($cacheHash)) {
+            return $items;
         }
+
+        $items = $this->serviceDeskResource->getServiceDeskById($serviceDeskId);
+        $this->cache->set($cacheHash, $items, ['jira_service_desk'], $this->lifeTime);
+
+        return $items;
+    }
+
+    /**
+     * Returns LanguageService
+     *
+     * @return \TYPO3\CMS\Core\Localization\LanguageService
+     */
+    private function getLanguageService() : LanguageService
+    {
+        return $GLOBALS['LANG'];
     }
 }
