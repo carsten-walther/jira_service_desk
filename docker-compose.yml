@@ -1,3 +1,4 @@
+# cmd: docker-compose run --rm t3docmake
 version: '3'
 services:
   t3docmake:
