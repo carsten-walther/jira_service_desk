@@ -39,7 +39,7 @@ Jira Service Desk
     jira_service_desk
 
 :Version:
-    |https://github.com/carsten-walther/jira_service_desk/releases|
+    |release|
 
 :Language:
     en
@@ -54,14 +54,14 @@ Jira Service Desk
     walther.carsten@web.de
 
 :License:
-   This extension is published under the `GNU General Public License v3.0`__ (GNU v3.0) license
+    This document is published under the Open Content License available from http://www.opencontent.org/opl.shtml
 
+:Rendered:
+   |today|
 
 **TYPO3**
 
-   The content of this document is related to TYPO3 CMS,
-   a GNU/GPL CMS/Framework available from `typo3.org
-   <https://typo3.org/>`_ .
+   The content of this document is related to TYPO3 CMS, a GNU/GPL CMS/Framework available from `typo3.org <https://typo3.org/>`_ .
 
 **Community Documentation:**
 
