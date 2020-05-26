@@ -16,6 +16,7 @@ use Walther\JiraServiceDesk\Service\Resource\Request;
 use Walther\JiraServiceDesk\Service\Resource\Requesttype;
 use Walther\JiraServiceDesk\Service\Resource\ServiceDesk;
 use Walther\JiraServiceDesk\Service\Service;
+use Walther\JiraServiceDesk\Utility\AccessUtility;
 
 /**
  * Main functionality to render a TYPO3 Backend Module.
@@ -188,7 +189,8 @@ class ServiceDeskController extends ActionController
 
         $this->view->assignMultiple([
             'serviceDesk' => $serviceDesk,
-            'requestTypeGroups' => $requestTypeGroups
+            'requestTypeGroups' => $requestTypeGroups,
+            'hasAccess' => AccessUtility::hasAccess()
         ]);
     }
 
@@ -226,7 +228,8 @@ class ServiceDeskController extends ActionController
             'requestStatus' => $requestStatus,
             'requestTypes' => $requestTypes,
             'requestTypeId' => $requestTypeId,
-            'customerRequests' => $customerRequests
+            'customerRequests' => $customerRequests,
+            'hasAccess' => AccessUtility::hasAccess()
         ]);
     }
 
@@ -260,7 +263,8 @@ class ServiceDeskController extends ActionController
 
         $this->view->assignMultiple([
             'customerRequest' => $customerRequest,
-            'transitions' => $transitions
+            'transitions' => $transitions,
+            'hasAccess' => AccessUtility::hasAccess()
         ]);
     }
 
@@ -376,7 +380,8 @@ class ServiceDeskController extends ActionController
             'serviceDesk' => $serviceDesk,
             'requestType' => $requestType,
             'requestTypeFields' => $requestTypeFields,
-            'newCustomerRequest' => $arguments['newCustomerRequest']
+            'newCustomerRequest' => $arguments['newCustomerRequest'],
+            'hasAccess' => AccessUtility::hasAccess()
         ]);
     }
 

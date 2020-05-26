@@ -1,9 +1,12 @@
-﻿.. include:: ../Includes.txt
+﻿.. ==================================================
+.. FOR YOUR INFORMATION
+.. --------------------------------------------------
+.. -*- coding: utf-8 -*- with BOM.
 
+.. include:: ../Includes.txt
 
 .. _introduction:
 
-============
 Introduction
 ============
 
@@ -12,16 +15,14 @@ This chapter gives you a basic introduction about the TYPO3 CMS extension “jir
 .. _what-it-does:
 
 What does it do?
-================
+----------------
 
 To use this extension you have to specify the URL of your Jira installation and the ID of the provided service desk in the extension configuration.
 
 The ticket management is handled by a backend user. To use this extension, you have to enter the e-mail address and password registered in Jira in the corresponding backend user.
 
-.. _dashboard:
-
 Dashboard
-=========
+---------
 
 The dashboard, introduced with TYPO3 version 10, supports 4 widgets:
 
@@ -30,10 +31,8 @@ The dashboard, introduced with TYPO3 version 10, supports 4 widgets:
 * Type (a graphical overview of all ticket types)
 * Requests (a list of recent user requests)
 
-.. _screenshots:
-
 Screenshots
-===========
+-----------
 
 .. figure:: ../Images/UserManual/ServiceDesk-Index.png
    :class: with-shadow

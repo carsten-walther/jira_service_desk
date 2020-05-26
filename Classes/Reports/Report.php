@@ -9,6 +9,7 @@ use TYPO3\CMS\Reports\Status;
 use TYPO3\CMS\Reports\StatusProviderInterface;
 use Walther\JiraServiceDesk\Service\Resource\Info;
 use Walther\JiraServiceDesk\Service\Service;
+use Walther\JiraServiceDesk\Utility\AccessUtility;
 
 /**
  * Provides an status report of the jira service desk.
@@ -117,21 +118,24 @@ class Report implements StatusProviderInterface
      */
     protected function checkServicedeskAvailability() : bool
     {
-        $service = GeneralUtility::makeInstance(Service::class)->initialize();
-
-        $info = GeneralUtility::makeInstance(Info::class, $service)->getInfo();
-
         $pass = false;
-        $msg = '';
+        $msg = 'Please check the user credentials!';
 
-        if ($info->status === 200) {
-            $pass = true;
-            $msg = 'Version: ' . $info->body->version . '<br>Platform: ' . $info->body->platformVersion . '<br>Build date: ' . $info->body->buildDate->friendly;
+        if (AccessUtility::hasAccess()) {
+            $service = GeneralUtility::makeInstance(Service::class)->initialize();
+
+            $info = GeneralUtility::makeInstance(Info::class, $service)->getInfo();
+
+            if ($info->status === 200) {
+                $pass = true;
+                $msg = 'Version: ' . $info->body->version . '<br>Platform: ' . $info->body->platformVersion . '<br>Build date: ' . $info->body->buildDate->friendly;
+            }
         }
+
         $this->reports[] = GeneralUtility::makeInstance(Status::class,
             $this->languageService->getLL('report.check.serviceDeskAvailability.title'),
             $pass ? 'OK' : 'Error',
-            $pass ? $msg : $this->languageService->getLL('report.check.serviceDeskAvailability.description'),
+            $msg ? $msg : $this->languageService->getLL('report.check.serviceDeskAvailability.description'),
             $pass ? Status::OK : Status::ERROR
         );
 

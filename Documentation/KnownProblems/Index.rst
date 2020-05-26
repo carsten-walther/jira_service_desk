@@ -5,13 +5,11 @@
 
 .. include:: ../Includes.txt
 
-
 .. _known-problems:
 
 Known Problems
 ==============
 
-Say where bugs can be reported / followed up.
+The following issues are known problems.
 
-Use this section for informing about any type of of problem
-that are not necessarily named in the bug tracker such as performance issues, ...
+Here is currently nothing.

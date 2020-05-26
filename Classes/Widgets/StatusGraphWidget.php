@@ -9,6 +9,7 @@ use TYPO3\CMS\Dashboard\Widgets\RequireJsModuleInterface;
 use TYPO3\CMS\Dashboard\Widgets\WidgetConfigurationInterface;
 use TYPO3\CMS\Dashboard\Widgets\WidgetInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use Walther\JiraServiceDesk\Utility\AccessUtility;
 use Walther\JiraServiceDesk\Widgets\Provider\StatusGraphWidgetDataProvider;
 
 /**
@@ -84,6 +85,7 @@ class StatusGraphWidget implements WidgetInterface, EventDataInterface, Addition
         $this->view->assignMultiple([
             'button' => $this->buttonProvider,
             'options' => $this->options,
+            'hasAccess' => AccessUtility::hasAccess(),
             'configuration' => $this->configuration
         ]);
         return $this->view->render();
@@ -97,20 +99,23 @@ class StatusGraphWidget implements WidgetInterface, EventDataInterface, Addition
      */
     public function getEventData() : array
     {
-        return [
-            'graphConfig' => [
-                'type' => 'doughnut',
-                'options' => [
-                    'maintainAspectRatio' => false,
-                    'legend' => [
-                        'display' => true,
-                        'position' => 'bottom'
+        if (AccessUtility::hasAccess()) {
+            return [
+                'graphConfig' => [
+                    'type' => 'doughnut',
+                    'options' => [
+                        'maintainAspectRatio' => FALSE,
+                        'legend' => [
+                            'display' => TRUE,
+                            'position' => 'bottom'
+                        ],
+                        'cutoutPercentage' => 60
                     ],
-                    'cutoutPercentage' => 60
+                    'data' => $this->getChartData(),
                 ],
-                'data' => $this->getChartData(),
-            ],
-        ];
+            ];
+        }
+        return [];
     }
 
     /**

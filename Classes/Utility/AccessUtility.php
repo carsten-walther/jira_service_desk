@@ -6,9 +6,7 @@ use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 
 /**
  * Class AccessUtility
- *
  * @package Walther\JiraServiceDesk\Utility
- * @Carsten Walther
  */
 class AccessUtility
 {

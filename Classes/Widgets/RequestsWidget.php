@@ -6,6 +6,7 @@ use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface as Cache;
 use TYPO3\CMS\Dashboard\Widgets\WidgetConfigurationInterface;
 use TYPO3\CMS\Dashboard\Widgets\WidgetInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use Walther\JiraServiceDesk\Utility\AccessUtility;
 use Walther\JiraServiceDesk\Widgets\Provider\RequestsWidgetDataProvider;
 
 /**
@@ -83,6 +84,7 @@ class RequestsWidget implements WidgetInterface
             'requests' => $this->getRequests(),
             'button' => $this->buttonProvider,
             'options' => $this->options,
+            'hasAccess' => AccessUtility::hasAccess(),
             'configuration' => $this->configuration
         ]);
         return $this->view->render();

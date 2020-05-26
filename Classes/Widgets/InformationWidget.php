@@ -6,6 +6,7 @@ use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface as Cache;
 use TYPO3\CMS\Dashboard\Widgets\WidgetConfigurationInterface;
 use TYPO3\CMS\Dashboard\Widgets\WidgetInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use Walther\JiraServiceDesk\Utility\AccessUtility;
 use Walther\JiraServiceDesk\Widgets\Provider\InformationWidgetDataProvider;
 
 /**
@@ -76,22 +77,31 @@ class InformationWidget implements WidgetInterface
      */
     public function renderWidgetContent() : string
     {
-        $requests = $this->getRequests();
+        $requests = [];
+        $serviceDesk = [];
+        $requestCounts = 0;
 
-        $requestCounts = [];
-        if (is_array($requests->values)) {
-            foreach ($requests->values as $key => $request) {
-                $requestCounts[$request->currentStatus->status]++;
+        if (AccessUtility::hasAccess()) {
+            $requests = $this->getRequests();
+
+            $requestCounts = [];
+            if (is_array($requests->values)) {
+                foreach ($requests->values as $key => $request) {
+                    $requestCounts[$request->currentStatus->status]++;
+                }
             }
+
+            $serviceDesk = $this->getServiceDeskInformation();
         }
 
         $this->view->setTemplate('Widget/Information');
         $this->view->assignMultiple([
-            'serviceDesk' => $this->getServiceDeskInformation(),
+            'serviceDesk' => $serviceDesk,
             'requests' => $requests,
             'requestCounts' => $requestCounts,
             'button' => $this->buttonProvider,
             'options' => $this->options,
+            'hasAccess' => AccessUtility::hasAccess(),
             'configuration' => $this->configuration
         ]);
         return $this->view->render();

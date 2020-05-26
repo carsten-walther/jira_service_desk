@@ -1,35 +1,11 @@
-﻿.. ---------------------------------------------------------------
-   This is the start file. It gets displayed as first page
-   https://docs.typo3.org/m/typo3/docs-how-to-document/master/en-us/GeneralConventions/DirectoryFilenames.html#supported-filenames-and-formats
-   ---------------------------------------------------------------
-
-.. ---------------------------------------------------------------
-   More information about creating an extension manual:
-   https://docs.typo3.org/m/typo3/docs-how-to-document/master/en-us/WritingDocForExtension/CreateWithExtensionBuilder.html
-   ---------------------------------------------------------------
-
-.. ---------------------------------------------------------------
-   comments start with 2 dots and a blank
-   they can continue on the next line
-   ---------------------------------------------------------------
-
-.. ---------------------------------------------------------------
-   every .rst file should include Includes.txt
-   use correct path!
-   ---------------------------------------------------------------
+﻿.. ==================================================
+.. FOR YOUR INFORMATION
+.. --------------------------------------------------
+.. -*- coding: utf-8 -*- with BOM.
 
 .. include:: Includes.txt
 
-.. ---------------------------------------------------------------
-   Every manual should have a start label for cross-referencing to
-   start page. Do not remove this!
-   ---------------------------------------------------------------
-
 .. _start:
-
-.. ---------------------------------------------------------------
-   This is the doctitle
-   ---------------------------------------------------------------
 
 =============================================================
 Jira Service Desk
@@ -76,17 +52,13 @@ Jira Service Desk
 
    :ref:`sitemap`
 
-.. ---------------------------------------------------------------
-   This generates the menu
-   https://docs.typo3.org/m/typo3/docs-how-to-document/master/en-us/WritingReST/MenuHierarchy.html
-   ---------------------------------------------------------------
-
 .. toctree::
-   :maxdepth: 3
-   :hidden:
+   :maxdepth: 5
+   :titlesonly:
+   :glob:
 
    Introduction/Index
-   User/Index
+   UsersManual/Index
    Installation/Index
    Configuration/Index
    Developer/Index
