@@ -2,6 +2,15 @@
 	"name": "walther/jira-service-desk",
 	"type": "typo3-cms-extension",
 	"description": "Get support from Jira Service Desk.",
+	"keywords": [
+		"TYPO3",
+		"extension",
+		"jira",
+		"service",
+		"desk",
+		"customer"
+	],
+	"homepage": "https://carstenwalther.de",
 	"license": "GPL-3.0-or-later",
 	"require": {
 		"typo3/cms-core": "^10.4.0"
