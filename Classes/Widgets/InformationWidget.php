@@ -3,6 +3,7 @@
 namespace Walther\JiraServiceDesk\Widgets;
 
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface as Cache;
+use TYPO3\CMS\Dashboard\Widgets\AdditionalCssInterface;
 use TYPO3\CMS\Dashboard\Widgets\WidgetConfigurationInterface;
 use TYPO3\CMS\Dashboard\Widgets\WidgetInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -14,7 +15,7 @@ use Walther\JiraServiceDesk\Widgets\Provider\InformationWidgetDataProvider;
  *
  * @package Walther\JiraServiceDesk\Widgets
  */
-class InformationWidget implements WidgetInterface
+class InformationWidget implements WidgetInterface, AdditionalCssInterface
 {
     /**
      * @var \TYPO3\CMS\Dashboard\Widgets\WidgetConfigurationInterface
@@ -63,12 +64,9 @@ class InformationWidget implements WidgetInterface
         $this->cache = $cache;
         $this->view = $view;
         $this->buttonProvider = $buttonProvider;
-        $this->options = array_merge(
-            [
-                'lifeTime' => 60*60*24*30
-            ],
-            $options
-        );
+        $this->options = array_merge([
+            'lifeTime' => 60 * 60 * 24 * 30
+        ], $options);
     }
 
     /**
@@ -105,6 +103,18 @@ class InformationWidget implements WidgetInterface
             'configuration' => $this->configuration
         ]);
         return $this->view->render();
+    }
+
+    /**
+     * getCssFiles
+     *
+     * @return array
+     */
+    public function getCssFiles() : array
+    {
+        return [
+            'EXT:jira_service_desk/Resources/Public/Css/Widget/information.css'
+        ];
     }
 
     /**

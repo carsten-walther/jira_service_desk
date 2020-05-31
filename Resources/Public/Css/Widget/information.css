@@ -1,0 +1,9 @@
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: min-content;
+  width: -webkit-fill-available;
+}
+
+/*# sourceMappingURL=information.css.map */

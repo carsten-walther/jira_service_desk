@@ -66,12 +66,9 @@ class TypeGraphWidget implements WidgetInterface, EventDataInterface, Additional
         $this->cache = $cache;
         $this->view = $view;
         $this->buttonProvider = $buttonProvider;
-        $this->options = array_merge(
-            [
-                'lifeTime' => 60*60*24
-            ],
-            $options
-        );
+        $this->options = array_merge([
+            'lifeTime' => 60 * 60 * 24
+        ], $options);
     }
 
     /**

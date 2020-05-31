@@ -85,11 +85,13 @@ class ServiceDesk extends AbstractResource
         $multipartFields = [];
 
         foreach ($files as $file) {
-            $multipartFields[] = [
-                'name' => 'file',
-                'filename' => $file['name'],
-                'contents' => fopen($file['url'], 'rb')
-            ];
+            if ($file['name'] && $file['url']) {
+                $multipartFields[] = [
+                    'name' => 'file',
+                    'filename' => $file['name'],
+                    'contents' => fopen($file['url'], 'rb')
+                ];
+            }
         }
 
         $result = $this->service

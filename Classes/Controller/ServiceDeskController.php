@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use Walther\JiraServiceDesk\Domain\Model\Attachment;
-use Walther\JiraServiceDesk\Service\Resource\Request;
+use Walther\JiraServiceDesk\Domain\Model\Request;
 use Walther\JiraServiceDesk\Service\Resource\Requesttype;
 use Walther\JiraServiceDesk\Service\Resource\ServiceDesk;
 use Walther\JiraServiceDesk\Service\Service;
@@ -77,43 +77,27 @@ class ServiceDeskController extends ActionController
     /**
      * ServiceDeskController constructor.
      *
-     * @param \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface $cache
-     */
-    public function __construct(Cache $cache)
-    {
-        $this->cache = $cache;
-    }
-
-    /**
-     * @param \Walther\JiraServiceDesk\Service\Service $service
-     */
-    public function injectService(Service $service) : void
-    {
-        $this->service = $service;
-    }
-
-    /**
+     * @param \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface      $cache
+     * @param \Walther\JiraServiceDesk\Service\Service              $service
      * @param \Walther\JiraServiceDesk\Service\Resource\ServiceDesk $serviceDeskResource
-     */
-    public function injectServiceDesk(ServiceDesk $serviceDeskResource) : void
-    {
-        $this->serviceDeskResource = $serviceDeskResource;
-    }
-
-    /**
-     * @param \Walther\JiraServiceDesk\Service\Resource\Request $requestResource
-     */
-    public function injectRequestResource(Request $requestResource) : void
-    {
-        $this->requestResource = $requestResource;
-    }
-
-    /**
+     * @param \Walther\JiraServiceDesk\Service\Resource\Request     $requestResource
      * @param \Walther\JiraServiceDesk\Service\Resource\Requesttype $requesttypeResource
      */
-    public function injectRequesttypeResource(Requesttype $requesttypeResource) : void
+    public function __construct(Cache $cache, Service $service, ServiceDesk $serviceDeskResource, \Walther\JiraServiceDesk\Service\Resource\Request $requestResource, Requesttype $requesttypeResource)
     {
+        $this->cache = $cache;
+
+        $this->service = $service;
+        $this->service->initialize();
+
+        $this->serviceDeskResource = $serviceDeskResource;
+        $this->serviceDeskResource->setService($this->service);
+
+        $this->requestResource = $requestResource;
+        $this->requestResource->setService($this->service);
+
         $this->requesttypeResource = $requesttypeResource;
+        $this->requesttypeResource->setService($this->service);
     }
 
     /**
@@ -135,29 +119,6 @@ class ServiceDeskController extends ActionController
             $this->view->getModuleTemplate()->getPageRenderer()->addInlineLanguageLabelFile('EXT:jira_service_desk/Resources/Private/Language/locallang.xlf');
             $this->view->getModuleTemplate()->getPageRenderer()->addCssFile('EXT:jira_service_desk/Resources/Public/Css/backend.css');
             $this->view->getModuleTemplate()->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/JiraServiceDesk/Servicedesk');
-        }
-
-        $this->service = !$this->service ? GeneralUtility::makeInstance(Service::class) : $this->service;
-
-        if ($this->service->initialize()) {
-
-            if (!$this->serviceDeskResource) {
-                $this->serviceDeskResource = GeneralUtility::makeInstance(ServiceDesk::class, $this->service);
-            } else {
-                $this->serviceDeskResource->setService($this->service);
-            }
-
-            if (!$this->requestResource) {
-                $this->requestResource = GeneralUtility::makeInstance(Request::class, $this->service);
-            } else {
-                $this->requestResource->setService($this->service);
-            }
-
-            if (!$this->requesttypeResource) {
-                $this->requesttypeResource = GeneralUtility::makeInstance(Requesttype::class, $this->service);
-            } else {
-                $this->requesttypeResource->setService($this->service);
-            }
         }
     }
 
@@ -305,6 +266,10 @@ class ServiceDeskController extends ActionController
             $queue->addMessage($message);
         }
 
+        if ($this->cache->isValidTag('jira_service_desk')) {
+            $this->cache->flushByTag('jira_service_desk');
+        }
+
         $this->redirect('show', 'ServiceDesk', null, [
             'issueId' => $arguments['comment']['requestId']
         ]);
@@ -345,6 +310,10 @@ class ServiceDeskController extends ActionController
             $service = GeneralUtility::makeInstance(FlashMessageService::class);
             $queue = $service->getMessageQueueByIdentifier();
             $queue->addMessage($message);
+        }
+
+        if ($this->cache->isValidTag('jira_service_desk')) {
+            $this->cache->flushByTag('jira_service_desk');
         }
 
         $this->redirect('show', 'ServiceDesk', null, [
@@ -432,6 +401,7 @@ class ServiceDeskController extends ActionController
             $temporaryAttachments = $this->serviceDeskResource->attachTemporaryFile($serviceDeskId, $files);
 
             if ($temporaryAttachments->getStatus() === 201) {
+                /** @var \Walther\JiraServiceDesk\Domain\Model\Attachment $newAttachment */
                 $newAttachment = GeneralUtility::makeInstance(Attachment::class);
                 $newAttachment->setPublic(true);
                 foreach ($temporaryAttachments->getBody()->temporaryAttachments as $temporaryAttachment) {
@@ -440,7 +410,8 @@ class ServiceDeskController extends ActionController
             }
         }
 
-        $newRequest = GeneralUtility::makeInstance(\Walther\JiraServiceDesk\Domain\Model\Request::class);
+        /** @var \Walther\JiraServiceDesk\Domain\Model\Request $newRequest */
+        $newRequest = GeneralUtility::makeInstance(Request::class);
         $newRequest->setServiceDeskId($serviceDeskId);
         $newRequest->setRequestTypeId((int)$arguments['requestType']['id']);
 
@@ -474,6 +445,10 @@ class ServiceDeskController extends ActionController
                 }
             }
 
+            if ($this->cache->isValidTag('jira_service_desk')) {
+                $this->cache->flushByTag('jira_service_desk');
+            }
+
             BackendUtility::setUpdateSignal('ServiceDeskToolbarItem::updateServiceDeskMenu');
             $message = GeneralUtility::makeInstance(
                 FlashMessage::class,
@@ -485,7 +460,7 @@ class ServiceDeskController extends ActionController
             $queue = $service->getMessageQueueByIdentifier();
             $queue->addMessage($message);
             $this->redirect('show', 'ServiceDesk', null, [
-                'requestId' => $result->body->issueId
+                'issueId' => $result->body->issueId
             ]);
         } else {
             $message = GeneralUtility::makeInstance(
@@ -508,7 +483,7 @@ class ServiceDeskController extends ActionController
      */
     public function helpAction() : void
     {
-
+        // ...
     }
 
     /**
@@ -518,7 +493,7 @@ class ServiceDeskController extends ActionController
      */
     public function accessDeniedAction() : void
     {
-
+        // ...
     }
 
     /**

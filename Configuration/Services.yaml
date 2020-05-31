@@ -17,6 +17,10 @@ services:
     arguments:
       $cache: '@cache.dashboard.jira_service_desk'
 
+  Walther\JiraServiceDesk\Controller\AjaxController:
+    arguments:
+      $cache: '@cache.dashboard.jira_service_desk'
+
   cache.dashboard.jira_service_desk:
     class: 'TYPO3\CMS\Core\Cache\Frontend\FrontendInterface'
     factory: ['@TYPO3\CMS\Core\Cache\CacheManager', 'getCache']

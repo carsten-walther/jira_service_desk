@@ -63,14 +63,11 @@ class RequestsWidget implements WidgetInterface
         $this->cache = $cache;
         $this->view = $view;
         $this->buttonProvider = $buttonProvider;
-        $this->options = array_merge(
-            [
-                'lifeTime' => 60*60*1,
-                'limit' => 10,
-                'page' => 0
-            ],
-            $options
-        );
+        $this->options = array_merge([
+            'lifeTime' => 60 * 60 * 1,
+            'limit' => 10,
+            'page' => 0
+        ], $options);
     }
 
     /**

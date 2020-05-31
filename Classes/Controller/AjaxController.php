@@ -8,6 +8,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface as Cache;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Http\JsonResponse;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -23,7 +24,7 @@ use Walther\JiraServiceDesk\Utility\AccessUtility;
  * @package Walther\JiraServiceDesk\Controller
  * @author  Carsten Walther
  */
-class AjaxController
+class AjaxController implements SingletonInterface
 {
     /**
      * Service object
@@ -31,33 +32,28 @@ class AjaxController
      * @var \Walther\JiraServiceDesk\Service\Service
      */
     protected $service;
-
     /**
      * ServiceDesk resource object
      *
      * @var \Walther\JiraServiceDesk\Service\Resource\ServiceDesk
      */
     protected $serviceDeskResource;
-
     /**
      * Request resource object
      *
      * @var \Walther\JiraServiceDesk\Service\Resource\Request
      */
     protected $requestResource;
-
     /**
      * Knowledgebase resource object
      *
      * @var \Walther\JiraServiceDesk\Service\Resource\Knowledgebase
      */
     protected $knowledgebaseResource;
-
     /**
      * @var Cache
      */
     private $cache;
-
     /**
      * @var int
      */
@@ -66,67 +62,29 @@ class AjaxController
     /**
      * AjaxController constructor.
      *
-     * @return void
+     * @param \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface        $cache
+     * @param \Walther\JiraServiceDesk\Service\Service                $service
+     * @param \Walther\JiraServiceDesk\Service\Resource\ServiceDesk   $serviceDeskResource
+     * @param \Walther\JiraServiceDesk\Service\Resource\Request       $requestResource
+     * @param \Walther\JiraServiceDesk\Service\Resource\Knowledgebase $knowledgebaseResource
      */
-    public function __construct()
+    public function __construct(Cache $cache, Service $service, ServiceDesk $serviceDeskResource, Request $requestResource, Knowledgebase $knowledgebaseResource)
     {
         if (AccessUtility::hasAccess()) {
+            $this->cache = $cache;
 
-            $this->service = !$this->service ? GeneralUtility::makeInstance(Service::class) : $this->service;
+            $this->service = $service;
+            $this->service->initialize();
 
-            if ($this->service->initialize()) {
+            $this->serviceDeskResource = $serviceDeskResource;
+            $this->serviceDeskResource->setService($this->service);
 
-                if (!$this->serviceDeskResource) {
-                    $this->serviceDeskResource = GeneralUtility::makeInstance(ServiceDesk::class, $this->service);
-                } else {
-                    $this->serviceDeskResource->setService($this->service);
-                }
+            $this->requestResource = $requestResource;
+            $this->requestResource->setService($this->service);
 
-                if (!$this->requestResource) {
-                    $this->requestResource = GeneralUtility::makeInstance(Request::class, $this->service);
-                } else {
-                    $this->requestResource->setService($this->service);
-                }
-
-                if (!$this->knowledgebaseResource) {
-                    $this->knowledgebaseResource = GeneralUtility::makeInstance(Knowledgebase::class, $this->service);
-                } else {
-                    $this->knowledgebaseResource->setService($this->service);
-                }
-            }
+            $this->knowledgebaseResource = $knowledgebaseResource;
+            $this->knowledgebaseResource->setService($this->service);
         }
-    }
-
-    /**
-     * @param \Walther\JiraServiceDesk\Service\Service $service
-     */
-    public function injectService(Service $service) : void
-    {
-        $this->service = $service;
-    }
-
-    /**
-     * @param \Walther\JiraServiceDesk\Service\Resource\ServiceDesk $serviceDeskResource
-     */
-    public function injectServiceDeskResource(ServiceDesk $serviceDeskResource) : void
-    {
-        $this->serviceDeskResource = $serviceDeskResource;
-    }
-
-    /**
-     * @param \Walther\JiraServiceDesk\Service\Resource\Request $requestResource
-     */
-    public function injectRequestResource(Request $requestResource) : void
-    {
-        $this->requestResource = $requestResource;
-    }
-
-    /**
-     * @param \Walther\JiraServiceDesk\Service\Resource\Knowledgebase $knowledgebase
-     */
-    public function injectKnowledgebaseResource(Knowledgebase $knowledgebase) : void
-    {
-        $this->knowledgebaseResource = $knowledgebase;
     }
 
     /**
