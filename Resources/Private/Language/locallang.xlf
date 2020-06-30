@@ -4,65 +4,6 @@
 		<header/>
 		<body>
 
-			<!-- widget groups / presets -->
-
-			<trans-unit id="widgetGroups.jiraservicedesk">
-				<source>Jira Service Desk</source>
-			</trans-unit>
-
-			<trans-unit id="dashboardPresets.jiraservicedesk.title">
-				<source>Jira Service Desk</source>
-			</trans-unit>
-			<trans-unit id="dashboardPresets.jiraservicedesk.description">
-				<source>Jira Service Desk Overview.</source>
-			</trans-unit>
-
-			<!-- widgets -->
-
-			<trans-unit id="widgets.information.title">
-				<source>Service Desk Information</source>
-			</trans-unit>
-			<trans-unit id="widgets.information.description">
-				<source>Get information of your Service Desk.</source>
-			</trans-unit>
-			<trans-unit id="widgets.information.label.projectName">
-				<source>Project Name</source>
-			</trans-unit>
-			<trans-unit id="widgets.information.label.projectKey">
-				<source>Project Key</source>
-			</trans-unit>
-			<trans-unit id="widgets.information.label.projectId">
-				<source>Project ID</source>
-			</trans-unit>
-
-			<trans-unit id="widgets.status.title">
-				<source>Status</source>
-			</trans-unit>
-			<trans-unit id="widgets.status.description">
-				<source>Overview of your Service Desk Issues states as graph.</source>
-			</trans-unit>
-
-			<trans-unit id="widgets.type.title">
-				<source>Types</source>
-			</trans-unit>
-			<trans-unit id="widgets.type.description">
-				<source>Overview of your Service Desk Issues types as graph.</source>
-			</trans-unit>
-
-			<trans-unit id="widgets.requests.title">
-				<source>Requests</source>
-			</trans-unit>
-			<trans-unit id="widgets.requests.description">
-				<source>Keep track of your Service Desk requests.</source>
-			</trans-unit>
-
-			<trans-unit id="widgets.buttons.serviceDesk">
-				<source>Jira Service Desk</source>
-			</trans-unit>
-			<trans-unit id="widgets.buttons.requests">
-				<source>Requests</source>
-			</trans-unit>
-
 			<!-- toolbar -->
 
 			<trans-unit id="toolbarItem">
@@ -87,7 +28,7 @@
 				<source>Help</source>
 			</trans-unit>
 			<trans-unit id="toolbarItem.serviceDesk.help.description">
-				<source>Learn how to use your Service Desk.</source>
+				<source>Lear how to use your Service Desk.</source>
 			</trans-unit>
 
 			<trans-unit id="toolbarItem.serviceDesk.projectId">

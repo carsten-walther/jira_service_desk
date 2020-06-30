@@ -1,0 +1,11 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$interface_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_resource_interface.html" title=" " alt="" coords="5,153,136,179"/>
+<area shape="rect" id="node2" href="$class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_abstract_resource.html" title=" " alt="" coords="184,153,311,179"/>
+<area shape="rect" id="node3" href="$class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_customer.html" title=" " alt="" coords="377,5,457,31"/>
+<area shape="rect" id="node4" href="$class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_info.html" title=" " alt="" coords="395,55,439,80"/>
+<area shape="rect" id="node5" href="$class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_knowledgebase.html" title=" " alt="" coords="359,104,475,129"/>
+<area shape="rect" id="node6" href="$class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_organization.html" title=" " alt="" coords="369,153,465,179"/>
+<area shape="rect" id="node7" href="$class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html" title=" " alt="" coords="382,203,453,228"/>
+<area shape="rect" id="node8" href="$class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_requesttype.html" title=" " alt="" coords="369,252,465,277"/>
+<area shape="rect" id="node9" href="$class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_service_desk.html" title=" " alt="" coords="369,301,465,327"/>
+</map>

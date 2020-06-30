@@ -1,0 +1,9 @@
+digraph "requestAction"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node20 [label="requestAction",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node20 -> Node21 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node21 [label="handleRequest",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_walther_1_1_jira_service_desk_1_1_controller_1_1_service_desk_controller.html#a64e948dc4ecc56841952c042fffe8bb7"];
+}

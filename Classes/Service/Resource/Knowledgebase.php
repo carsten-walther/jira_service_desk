@@ -1,16 +1,13 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\Service\Resource;
 
-use Walther\JiraServiceDesk\Service\Response;
-use Walther\JiraServiceDesk\Service\Service;
-
 /**
  * Class Knowledgebase
- *
  * @package Walther\JiraServiceDesk\Service
  */
-class Knowledgebase extends AbstractResource
+class Knowledgebase extends \Walther\JiraServiceDesk\Service\Resource\AbstractResource
 {
     /**
      * @var string
@@ -32,7 +29,7 @@ class Knowledgebase extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getArticles(string $query, bool $highlight = true, int $start = 0, int $limit = 20) : Response
+    public function getArticles(string $query, bool $highlight = true, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'query' => $query,
@@ -42,7 +39,7 @@ class Knowledgebase extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/article')
             ->setGetParams($data)
             ->setExperimentalApi()

@@ -1,17 +1,15 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\ViewHelpers\Be\Widget\Controller;
-
-use TYPO3\CMS\Core\Utility\ArrayUtility;
-use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController;
 
 /**
  * Class PaginateController
  *
  * @package Walther\JiraServiceDesk\ViewHelpers\Be\Widget\Controller
- * @author  Carsten Walther
+ * @author Carsten Walther
  */
-class PaginateController extends AbstractWidgetController
+class PaginateController extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController
 {
     /**
      * The configuration array.
@@ -48,7 +46,7 @@ class PaginateController extends AbstractWidgetController
      */
     public function initializeAction()
     {
-        ArrayUtility::mergeRecursiveWithOverrule($this->configuration, $this->widgetConfiguration['configuration'], false);
+        \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($this->configuration, $this->widgetConfiguration['configuration'], false);
 
         $this->currentPage = (int)$this->configuration['currentPage'];
         $this->itemsPerPage = (int)$this->configuration['itemsPerPage'];
@@ -58,6 +56,7 @@ class PaginateController extends AbstractWidgetController
     /**
      * The main index action.
      *
+     * @param int $currentPage
      */
     public function indexAction() : void
     {

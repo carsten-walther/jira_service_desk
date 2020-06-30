@@ -1,17 +1,15 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\ViewHelpers\Be\Widget;
-
-use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetViewHelper;
-use Walther\JiraServiceDesk\ViewHelpers\Be\Widget\Controller\PaginateController;
 
 /**
  * Class PaginateViewHelper
  *
  * @package Walther\JiraServiceDesk\ViewHelpers\Be\Widget
- * @author  Carsten Walther
+ * @author Carsten Walther
  */
-class PaginateViewHelper extends AbstractWidgetViewHelper
+class PaginateViewHelper extends \TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetViewHelper
 {
     /**
      * The PaginateController object.
@@ -25,7 +23,7 @@ class PaginateViewHelper extends AbstractWidgetViewHelper
      *
      * @param \Walther\JiraServiceDesk\ViewHelpers\Be\Widget\Controller\PaginateController $controller
      */
-    public function injectPaginateController(PaginateController $controller)
+    public function injectPaginateController(\Walther\JiraServiceDesk\ViewHelpers\Be\Widget\Controller\PaginateController $controller)
     {
         $this->controller = $controller;
     }
@@ -38,7 +36,6 @@ class PaginateViewHelper extends AbstractWidgetViewHelper
     public function initializeArguments()
     {
         parent::initializeArguments();
-
         $this->registerArgument('configuration', 'array', 'configuration', false, ['currentPage' => 0, 'itemsPerPage' => 20, 'maxItems' => 0]);
     }
 

@@ -1,22 +1,15 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\Backend\ToolbarItems;
-
-use TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
-use Walther\JiraServiceDesk\Service\Resource\Request;
-use Walther\JiraServiceDesk\Service\Resource\ServiceDesk;
-use Walther\JiraServiceDesk\Service\Service;
-use Walther\JiraServiceDesk\Utility\AccessUtility;
 
 /**
  * Main functionality to render a toolbar at the top bar of the TYPO3 Backend.
  *
  * @package Walther\JiraServiceDesk\Backend\ToolbarItems
- * @author  Carsten Walther
+ * @author Carsten Walther
  */
-class ServiceDeskToolbarItem implements ToolbarItemInterface
+class ServiceDeskToolbarItem implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
 {
     /**
      * Checks whether the user has access to this toolbar item.
@@ -25,7 +18,7 @@ class ServiceDeskToolbarItem implements ToolbarItemInterface
      */
     public function checkAccess() : bool
     {
-        return AccessUtility::hasAccess();
+        return \Walther\JiraServiceDesk\Utility\AccessUtility::hasAccess();
     }
 
     /**
@@ -37,31 +30,11 @@ class ServiceDeskToolbarItem implements ToolbarItemInterface
      */
     public function getItem() : string
     {
-        if (AccessUtility::hasAccess()) {
+        if (\Walther\JiraServiceDesk\Utility\AccessUtility::hasAccess()) {
             return $this->getFluidTemplateObject('ToolbarItem.html')->render();
         }
 
         return '';
-    }
-
-    /**
-     * Returns a new standalone view, shorthand function.
-     *
-     * @param string $filename
-     *
-     * @return \TYPO3\CMS\Fluid\View\StandaloneView The standalone view
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\InvalidExtensionNameException
-     */
-    protected function getFluidTemplateObject(string $filename) : StandaloneView
-    {
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setLayoutRootPaths(['EXT:jira_service_desk/Resources/Private/Layouts']);
-        $view->setPartialRootPaths(['EXT:jira_service_desk/Resources/Private/Partials']);
-        $view->setTemplateRootPaths(['EXT:jira_service_desk/Resources/Private/Templates/ToolbarItems']);
-        $view->setTemplate($filename);
-        $view->getRequest()->setControllerExtensionName('ServiceDesk');
-
-        return $view;
     }
 
     /**
@@ -71,7 +44,7 @@ class ServiceDeskToolbarItem implements ToolbarItemInterface
      */
     public function hasDropDown() : bool
     {
-        if (AccessUtility::hasAccess()) {
+        if (\Walther\JiraServiceDesk\Utility\AccessUtility::hasAccess()) {
             return true;
         }
 
@@ -88,13 +61,13 @@ class ServiceDeskToolbarItem implements ToolbarItemInterface
      */
     public function getDropDown() : string
     {
-        if (AccessUtility::hasAccess()) {
+        if (\Walther\JiraServiceDesk\Utility\AccessUtility::hasAccess()) {
             $serviceDeskId = (int)$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['jira_service_desk']['serviceDeskId'];
 
-            $service = GeneralUtility::makeInstance(Service::class)->initialize();
-            $serviceDesk = GeneralUtility::makeInstance(ServiceDesk::class, $service);
+            $service = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Walther\JiraServiceDesk\Service\Service::class)->initialize();
+            $serviceDesk = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Walther\JiraServiceDesk\Service\Resource\ServiceDesk::class, $service);
 
-            $request = GeneralUtility::makeInstance(Request::class, $service);
+            $request = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Walther\JiraServiceDesk\Service\Resource\Request::class, $service);
             $customerRequests = $request->getCustomerRequests($serviceDeskId);
 
             $customerRequestCounts = [];
@@ -159,5 +132,25 @@ class ServiceDeskToolbarItem implements ToolbarItemInterface
                 top.TYPO3.ServiceDeskMenu.updateMenu();
             }
         ';
+    }
+
+    /**
+     * Returns a new standalone view, shorthand function.
+     *
+     * @param string $filename
+     *
+     * @return \TYPO3\CMS\Fluid\View\StandaloneView The standalone view
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\InvalidExtensionNameException
+     */
+    protected function getFluidTemplateObject(string $filename) : \TYPO3\CMS\Fluid\View\StandaloneView
+    {
+        $view = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Fluid\View\StandaloneView::class);
+        $view->setLayoutRootPaths(['EXT:jira_service_desk/Resources/Private/Layouts']);
+        $view->setPartialRootPaths(['EXT:jira_service_desk/Resources/Private/Partials']);
+        $view->setTemplateRootPaths(['EXT:jira_service_desk/Resources/Private/Templates/ToolbarItems']);
+        $view->setTemplate($filename);
+        $view->getRequest()->setControllerExtensionName('ServiceDesk');
+
+        return $view;
     }
 }

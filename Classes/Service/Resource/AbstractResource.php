@@ -1,20 +1,15 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\Service\Resource;
-
-use TYPO3\CMS\Core\Log\LogLevel;
-use TYPO3\CMS\Core\Log\LogRecord;
-use TYPO3\CMS\Core\Log\Writer\SyslogWriter;
-use TYPO3\CMS\Extbase\Persistence\Generic\Exception\UnexpectedTypeException;
-use Walther\JiraServiceDesk\Service\Service;
 
 /**
  * Class AbstractResource
  *
  * @package Walther\JiraServiceDesk\Service\Resource
- * @author  Carsten Walther
+ * @author Carsten Walther
  */
-abstract class AbstractResource implements ResourceInterface
+abstract class AbstractResource implements \Walther\JiraServiceDesk\Service\Resource\ResourceInterface
 {
     /**
      * The Service object.
@@ -34,15 +29,14 @@ abstract class AbstractResource implements ResourceInterface
      * AbstractResource constructor.
      *
      * @param \Walther\JiraServiceDesk\Service\Service $service
-     *
      * @return void
      * @throws \TYPO3\CMS\Extbase\Persistence\Generic\Exception\UnexpectedTypeException
      */
-    public function __construct(Service $service)
+    public function __construct(\Walther\JiraServiceDesk\Service\Service $service)
     {
         if (!$this->resource) {
             $this->log('Missing resource name.');
-            throw new UnexpectedTypeException('Missing resource name.', 100219811242);
+            throw new \TYPO3\CMS\Extbase\Persistence\Generic\Exception\UnexpectedTypeException('Missing resource name.', 100219811242);
         }
 
         $this->service = $service;
@@ -55,21 +49,13 @@ abstract class AbstractResource implements ResourceInterface
      */
     final public function log(string $message = '') : void
     {
-        $syslogWriter = new SyslogWriter();
-        $syslogWriter->writeLog(new LogRecord(
+        $syslogWriter = new \TYPO3\CMS\Core\Log\Writer\SyslogWriter();
+        $syslogWriter->writeLog(new \TYPO3\CMS\Core\Log\LogRecord(
             $component = '',
-            $level = LogLevel::ERROR,
+            $level = \TYPO3\CMS\Core\Log\LogLevel::ERROR,
             $message,
             $data = [],
             $requestId = ''
         ));
-    }
-
-    /**
-     * @param \Walther\JiraServiceDesk\Service\Service $service
-     */
-    public function setService(Service $service) : void
-    {
-        $this->service = $service;
     }
 }

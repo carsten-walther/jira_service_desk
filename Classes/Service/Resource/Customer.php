@@ -1,16 +1,13 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\Service\Resource;
 
-use Walther\JiraServiceDesk\Service\Response;
-use Walther\JiraServiceDesk\Service\Service;
-
 /**
  * Class Customer
- *
  * @package Walther\JiraServiceDesk\Service
  */
-class Customer extends AbstractResource
+class Customer extends \Walther\JiraServiceDesk\Service\Resource\AbstractResource
 {
     /**
      * @var string
@@ -32,7 +29,7 @@ class Customer extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function createCustomer(string $email, string $displayName) : Response
+    public function createCustomer(string $email, string $displayName) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'email' => $email,
@@ -40,7 +37,7 @@ class Customer extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_POST)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_POST)
             ->setPostData($data)
             ->setUrl($this->resource)
             ->request();

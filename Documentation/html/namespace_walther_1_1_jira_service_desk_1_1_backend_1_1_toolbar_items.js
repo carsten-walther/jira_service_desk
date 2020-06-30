@@ -1,0 +1,4 @@
+var namespace_walther_1_1_jira_service_desk_1_1_backend_1_1_toolbar_items =
+[
+    [ "ServiceDeskToolbarItem", "class_walther_1_1_jira_service_desk_1_1_backend_1_1_toolbar_items_1_1_service_desk_toolbar_item.html", "class_walther_1_1_jira_service_desk_1_1_backend_1_1_toolbar_items_1_1_service_desk_toolbar_item" ]
+];

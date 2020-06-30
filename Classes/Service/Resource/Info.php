@@ -1,16 +1,13 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\Service\Resource;
 
-use Walther\JiraServiceDesk\Service\Response;
-use Walther\JiraServiceDesk\Service\Service;
-
 /**
  * Class Info
- *
  * @package Walther\JiraServiceDesk\Service
  */
-class Info extends AbstractResource
+class Info extends \Walther\JiraServiceDesk\Service\Resource\AbstractResource
 {
     /**
      * @var string
@@ -27,10 +24,10 @@ class Info extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getInfo() : Response
+    public function getInfo() : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource)
             ->request();
     }

@@ -1,16 +1,13 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\Service\Resource;
 
-use Walther\JiraServiceDesk\Service\Response;
-use Walther\JiraServiceDesk\Service\Service;
-
 /**
  * Class Requesttype
- *
  * @package Walther\JiraServiceDesk\Service
  */
-class Requesttype extends AbstractResource
+class Requesttype extends \Walther\JiraServiceDesk\Service\Resource\AbstractResource
 {
     /**
      * @var string
@@ -37,7 +34,7 @@ class Requesttype extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getAllRequestTypes(string $searchQuery = '', int $start = 0, int $limit = 20, bool $expand = false) : Response
+    public function getAllRequestTypes(string $searchQuery = '', int $start = 0, int $limit = 20, bool $expand = false) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'searchQuery' => $searchQuery,
@@ -50,7 +47,7 @@ class Requesttype extends AbstractResource
         }
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource)
             ->setGetParams($data)
             ->request();

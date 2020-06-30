@@ -1,16 +1,16 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\Service\Resource;
 
-use Walther\JiraServiceDesk\Service\Response;
-use Walther\JiraServiceDesk\Service\Service;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Class ServiceDesk
  *
  * @package Walther\JiraServiceDesk\Service
  */
-class ServiceDesk extends AbstractResource
+class ServiceDesk extends \Walther\JiraServiceDesk\Service\Resource\AbstractResource
 {
     /**
      * @var string
@@ -31,7 +31,7 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getServiceDesks(int $start = 0, int $limit = 20) : Response
+    public function getServiceDesks(int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'start' => $start,
@@ -39,7 +39,7 @@ class ServiceDesk extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setGetParams($data)
             ->setUrl($this->resource)
             ->request();
@@ -58,10 +58,10 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getServiceDeskById(int $serviceDeskId) : Response
+    public function getServiceDeskById(int $serviceDeskId) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $serviceDeskId)
             ->request();
     }
@@ -80,22 +80,20 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function attachTemporaryFile(int $serviceDeskId, array $files) : Response
+    public function attachTemporaryFile(int $serviceDeskId, array $files) : \Walther\JiraServiceDesk\Service\Response
     {
         $multipartFields = [];
 
         foreach ($files as $file) {
-            if ($file['name'] && $file['url']) {
-                $multipartFields[] = [
-                    'name' => 'file',
-                    'filename' => $file['name'],
-                    'contents' => fopen($file['url'], 'rb')
-                ];
-            }
+            $multipartFields[] = [
+                'name' => 'file',
+                'filename' => $file['name'],
+                'contents' => fopen($file['url'], 'rb')
+            ];
         }
 
         $result = $this->service
-            ->setType(Service::REQUEST_METHOD_POST)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_POST)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/attachTemporaryFile')
             ->setHeaders([
                 'X-ExperimentalApi' => 'opt-in',
@@ -128,7 +126,7 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getCustomers(int $serviceDeskId, string $query = '', int $start = 0, int $limit = 20) : Response
+    public function getCustomers(int $serviceDeskId, string $query = '', int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'query' => $query,
@@ -137,7 +135,7 @@ class ServiceDesk extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/customer')
             ->setGetParams($data)
             ->request();
@@ -158,7 +156,7 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function addCustomers(int $serviceDeskId, array $usernames = [], array $accountIds = []) : Response
+    public function addCustomers(int $serviceDeskId, array $usernames = [], array $accountIds = []) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'usernames' => $usernames,
@@ -166,7 +164,7 @@ class ServiceDesk extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_POST)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_POST)
             ->setPostData($data)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/customer')
             ->request();
@@ -188,7 +186,7 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function removeCustomers(int $serviceDeskId, array $usernames = [], array $accountIds = []) : Response
+    public function removeCustomers(int $serviceDeskId, array $usernames = [], array $accountIds = []) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'usernames' => $usernames,
@@ -196,7 +194,7 @@ class ServiceDesk extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_DELETE)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_DELETE)
             ->setPostData($data)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/customer')
             ->request();
@@ -218,7 +216,7 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getArticles(int $serviceDeskId, string $query, bool $highlight = false, int $start = 0, int $limit = 20) : Response
+    public function getArticles(int $serviceDeskId, string $query, bool $highlight = false, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'query' => $query,
@@ -228,7 +226,7 @@ class ServiceDesk extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/knowledgebase/article')
             ->setGetParams($data)
             ->setExperimentalApi()
@@ -251,7 +249,7 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getQueues(int $serviceDeskId, bool $includeCount = false, int $start = 0, int $limit = 20) : Response
+    public function getQueues(int $serviceDeskId, bool $includeCount = false, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'includeCount' => $includeCount,
@@ -260,7 +258,7 @@ class ServiceDesk extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/queue')
             ->setGetParams($data)
             ->setExperimentalApi()
@@ -282,14 +280,14 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getQueue(int $serviceDeskId, int $queueId, bool $includeCount = false) : Response
+    public function getQueue(int $serviceDeskId, int $queueId, bool $includeCount = false) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'includeCount' => $includeCount
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/queue/' . $queueId)
             ->setGetParams($data)
             ->setExperimentalApi()
@@ -313,7 +311,7 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getIssuesInQueue(int $serviceDeskId, int $queueId, int $start = 0, int $limit = 20) : Response
+    public function getIssuesInQueue(int $serviceDeskId, int $queueId, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'start' => $start,
@@ -321,7 +319,7 @@ class ServiceDesk extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/queue/' . $queueId . '/issue')
             ->setGetParams($data)
             ->setExperimentalApi()
@@ -347,7 +345,7 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getRequestTypes(int $serviceDeskId, bool $expand = false, int $groupId = null, string $searchQuery = '', int $start = 0, int $limit = 20) : Response
+    public function getRequestTypes(int $serviceDeskId, bool $expand = false, int $groupId = null, string $searchQuery = '', int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'groupId' => $groupId,
@@ -361,7 +359,7 @@ class ServiceDesk extends AbstractResource
         }
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/requesttype')
             ->setGetParams($data)
             ->request();
@@ -390,7 +388,7 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function createRequestType(int $serviceDeskId, string $issueTypeId = '', string $name = '', string $description = '', string $helpText = '') : Response
+    public function createRequestType(int $serviceDeskId, string $issueTypeId = '', string $name = '', string $description = '', string $helpText = '') : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'issueTypeId' => $issueTypeId,
@@ -400,7 +398,7 @@ class ServiceDesk extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_POST)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_POST)
             ->setPostData($data)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/requesttype')
             ->request();
@@ -420,7 +418,7 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getRequestTypeById(int $serviceDeskId, int $requestTypeId, bool $expand = false) : Response
+    public function getRequestTypeById(int $serviceDeskId, int $requestTypeId, bool $expand = false) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [];
 
@@ -429,7 +427,7 @@ class ServiceDesk extends AbstractResource
         }
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/requesttype/' . $requestTypeId)
             ->setGetParams($data)
             ->request();
@@ -451,10 +449,10 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getRequestTypeFields(int $serviceDeskId, int $requestTypeId) : Response
+    public function getRequestTypeFields(int $serviceDeskId, int $requestTypeId) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/requesttype/' . $requestTypeId . '/field')
             ->request();
     }
@@ -473,10 +471,10 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getPropertiesKeys(int $serviceDeskId, int $requestTypeId) : Response
+    public function getPropertiesKeys(int $serviceDeskId, int $requestTypeId) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/requesttype/' . $requestTypeId . '/property')
             ->request();
     }
@@ -496,10 +494,10 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getProperty(int $serviceDeskId, int $requestTypeId, string $propertyKey) : Response
+    public function getProperty(int $serviceDeskId, int $requestTypeId, string $propertyKey) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/requesttype/' . $requestTypeId . '/property/' . $propertyKey)
             ->request();
     }
@@ -519,10 +517,10 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function setProperty(int $serviceDeskId, int $requestTypeId, string $propertyKey) : Response
+    public function setProperty(int $serviceDeskId, int $requestTypeId, string $propertyKey) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_PUT)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_PUT)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/requesttype/' . $requestTypeId . '/property/' . $propertyKey)
             ->request();
     }
@@ -542,10 +540,10 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function deleteProperty(int $serviceDeskId, int $requestTypeId, string $propertyKey) : Response
+    public function deleteProperty(int $serviceDeskId, int $requestTypeId, string $propertyKey) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_DELETE)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_DELETE)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/requesttype/' . $requestTypeId . '/property/' . $propertyKey)
             ->request();
     }
@@ -565,7 +563,7 @@ class ServiceDesk extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getRequestTypeGroup(int $serviceDeskId, int $start = 0, int $limit = 20) : Response
+    public function getRequestTypeGroup(int $serviceDeskId, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'start' => $start,
@@ -573,7 +571,7 @@ class ServiceDesk extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $serviceDeskId . '/requesttypegroup')
             ->setGetParams($data)
             ->setExperimentalApi()

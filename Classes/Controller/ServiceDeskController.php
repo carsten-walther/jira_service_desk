@@ -1,35 +1,23 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\Controller;
 
-use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Backend\View\BackendTemplateView;
-use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface as Cache;
-use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\CMS\Core\Messaging\FlashMessage;
-use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
-use Walther\JiraServiceDesk\Domain\Model\Attachment;
-use Walther\JiraServiceDesk\Domain\Model\Request;
-use Walther\JiraServiceDesk\Service\Resource\Requesttype;
-use Walther\JiraServiceDesk\Service\Resource\ServiceDesk;
-use Walther\JiraServiceDesk\Service\Service;
-use Walther\JiraServiceDesk\Utility\AccessUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Main functionality to render a TYPO3 Backend Module.
  *
  * @package Walther\JiraServiceDesk\Controller
- * @author  Carsten Walther
+ * @author Carsten Walther
  */
-class ServiceDeskController extends ActionController
+class ServiceDeskController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 {
     /**
      * @var string
      */
-    protected $defaultViewObjectName = BackendTemplateView::class;
+    protected $defaultViewObjectName = \TYPO3\CMS\Backend\View\BackendTemplateView::class;
 
     /**
      * @var \TYPO3\CMS\Backend\View\BackendTemplateView
@@ -65,47 +53,12 @@ class ServiceDeskController extends ActionController
     protected $requesttypeResource;
 
     /**
-     * @var Cache
-     */
-    private $cache;
-
-    /**
-     * @var int
-     */
-    private $lifeTime = 60 * 60 * 1;
-
-    /**
-     * ServiceDeskController constructor.
-     *
-     * @param \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface      $cache
-     * @param \Walther\JiraServiceDesk\Service\Service              $service
-     * @param \Walther\JiraServiceDesk\Service\Resource\ServiceDesk $serviceDeskResource
-     * @param \Walther\JiraServiceDesk\Service\Resource\Request     $requestResource
-     * @param \Walther\JiraServiceDesk\Service\Resource\Requesttype $requesttypeResource
-     */
-    public function __construct(Cache $cache, Service $service, ServiceDesk $serviceDeskResource, \Walther\JiraServiceDesk\Service\Resource\Request $requestResource, Requesttype $requesttypeResource)
-    {
-        $this->cache = $cache;
-
-        $this->service = $service;
-        $this->service->initialize();
-
-        $this->serviceDeskResource = $serviceDeskResource;
-        $this->serviceDeskResource->setService($this->service);
-
-        $this->requestResource = $requestResource;
-        $this->requestResource->setService($this->service);
-
-        $this->requesttypeResource = $requesttypeResource;
-        $this->requesttypeResource->setService($this->service);
-    }
-
-    /**
      * @param \TYPO3\CMS\Extbase\Mvc\View\ViewInterface $view
      *
      * @return void
+     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
-    protected function initializeView(ViewInterface $view) : void
+    protected function initializeView(\TYPO3\CMS\Extbase\Mvc\View\ViewInterface $view)
     {
         parent::initializeView($view);
 
@@ -115,10 +68,18 @@ class ServiceDeskController extends ActionController
             $this->view->getModuleTemplate()->setFlashMessageQueue($this->controllerContext->getFlashMessageQueue());
         }
 
-        if ($this->view instanceof BackendTemplateView) {
+        if ($this->view instanceof \TYPO3\CMS\Backend\View\BackendTemplateView) {
             $this->view->getModuleTemplate()->getPageRenderer()->addInlineLanguageLabelFile('EXT:jira_service_desk/Resources/Private/Language/locallang.xlf');
             $this->view->getModuleTemplate()->getPageRenderer()->addCssFile('EXT:jira_service_desk/Resources/Public/Css/backend.css');
             $this->view->getModuleTemplate()->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/JiraServiceDesk/Servicedesk');
+        }
+
+        $this->service = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Walther\JiraServiceDesk\Service\Service::class);
+
+        if ($this->service->initialize()) {
+            $this->serviceDeskResource = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Walther\JiraServiceDesk\Service\Resource\ServiceDesk::class, $this->service);
+            $this->requestResource = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Walther\JiraServiceDesk\Service\Resource\Request::class, $this->service);
+            $this->requesttypeResource = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Walther\JiraServiceDesk\Service\Resource\Requesttype::class, $this->service);
         }
     }
 
@@ -133,9 +94,8 @@ class ServiceDeskController extends ActionController
     {
         $serviceDeskId = (int)$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['jira_service_desk']['serviceDeskId'];
 
-        $requestTypeGroups = $this->getRequestTypeGroup($serviceDeskId);
-        $requestTypes = $this->getRequestTypes($serviceDeskId, true);
-        $serviceDesk = $this->getServiceDeskById($serviceDeskId);
+        $requestTypeGroups = $this->serviceDeskResource->getRequestTypeGroup($serviceDeskId);
+        $requestTypes = $this->serviceDeskResource->getRequestTypes($serviceDeskId, true);
 
         foreach ($requestTypeGroups->body->values as $requestTypeGroupKey => $requestTypeGroup) {
             foreach ($requestTypes->body->values as $requestType) {
@@ -149,9 +109,8 @@ class ServiceDeskController extends ActionController
         }
 
         $this->view->assignMultiple([
-            'serviceDesk' => $serviceDesk,
-            'requestTypeGroups' => $requestTypeGroups,
-            'hasAccess' => AccessUtility::hasAccess()
+            'serviceDesk' => $this->serviceDeskResource->getServiceDeskById($serviceDeskId),
+            'requestTypeGroups' => $requestTypeGroups
         ]);
     }
 
@@ -179,7 +138,7 @@ class ServiceDeskController extends ActionController
         $limit = 10;
 
         $customerRequests = $this->requestResource->getCustomerRequests($serviceDeskId, (int)$requestTypeId, true, $searchTerm, $requestOwnership, $requestStatus, $approvalStatus, '', (int)$page, $limit);
-        $requestTypes = $this->getRequestTypes($serviceDeskId, true);
+        $requestTypes = $this->serviceDeskResource->getRequestTypes($serviceDeskId, true);
 
         $this->view->assignMultiple([
             'page' => $page,
@@ -189,8 +148,7 @@ class ServiceDeskController extends ActionController
             'requestStatus' => $requestStatus,
             'requestTypes' => $requestTypes,
             'requestTypeId' => $requestTypeId,
-            'customerRequests' => $customerRequests,
-            'hasAccess' => AccessUtility::hasAccess()
+            'customerRequests' => $customerRequests
         ]);
     }
 
@@ -220,22 +178,20 @@ class ServiceDeskController extends ActionController
 
         $customerRequest->body->status->values = $sortedActivities;
 
-        $transitions = $this->requestResource->getCustomerTransitions($arguments['issueId']);
-
         $this->view->assignMultiple([
             'customerRequest' => $customerRequest,
-            'transitions' => $transitions,
-            'hasAccess' => AccessUtility::hasAccess()
+            'transitions' => $this->requestResource->getCustomerTransitions($arguments['issueKey'])
         ]);
     }
 
     /**
      * Add comment fire signal slot and redirect back to show action.
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      * @todo Implement attachment upload
      *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
      */
     public function addCommentAction() : void
     {
@@ -244,34 +200,30 @@ class ServiceDeskController extends ActionController
         $result = $this->requestResource->createRequestComment($arguments['comment']['requestId'], $arguments['comment']['comment']);
 
         if ($result->getStatus() === 201) {
-            BackendUtility::setUpdateSignal('ServiceDeskToolbarItem::updateServiceDeskMenu');
-            $message = GeneralUtility::makeInstance(
-                FlashMessage::class,
-                $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createRequestComment.success.description'),
-                $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createRequestComment.success.title'),
-                FlashMessage::OK, true
-            );
-            $service = GeneralUtility::makeInstance(FlashMessageService::class);
-            $queue = $service->getMessageQueueByIdentifier();
-            $queue->addMessage($message);
+            \TYPO3\CMS\Backend\Utility\BackendUtility::setUpdateSignal('ServiceDeskToolbarItem::updateServiceDeskMenu');
+            $this->objectManager
+                ->get(\TYPO3\CMS\Core\Messaging\FlashMessageService::class)
+                ->getMessageQueueByIdentifier()
+                ->addMessage(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                    \TYPO3\CMS\Core\Messaging\FlashMessage::class,
+                    $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createRequestComment.success.description'),
+                    $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createRequestComment.success.title'),
+                    \TYPO3\CMS\Core\Messaging\FlashMessage::OK, true
+                ));
         } else {
-            $message = GeneralUtility::makeInstance(
-                FlashMessage::class,
-                $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createRequestComment.error.description'),
-                $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createRequestComment.error.title'),
-                FlashMessage::ERROR, true
-            );
-            $service = GeneralUtility::makeInstance(FlashMessageService::class);
-            $queue = $service->getMessageQueueByIdentifier();
-            $queue->addMessage($message);
-        }
-
-        if ($this->cache->isValidTag('jira_service_desk')) {
-            $this->cache->flushByTag('jira_service_desk');
+            $this->objectManager
+                ->get(\TYPO3\CMS\Core\Messaging\FlashMessageService::class)
+                ->getMessageQueueByIdentifier()
+                ->addMessage(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                    \TYPO3\CMS\Core\Messaging\FlashMessage::class,
+                    $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createRequestComment.error.description'),
+                    $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createRequestComment.error.title'),
+                    \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR, true
+                ));
         }
 
         $this->redirect('show', 'ServiceDesk', null, [
-            'issueId' => $arguments['comment']['requestId']
+            'requestId' => $arguments['comment']['requestId']
         ]);
     }
 
@@ -282,6 +234,7 @@ class ServiceDeskController extends ActionController
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
      */
     public function addTransitionAction() : void
     {
@@ -290,34 +243,30 @@ class ServiceDeskController extends ActionController
         $result = $this->requestResource->performCustomerTransition($arguments['transition']['requestId'], (int)$arguments['transition']['transitionId'], $arguments['transition']['comment']);
 
         if ($result->getStatus() === 204) {
-            BackendUtility::setUpdateSignal('ServiceDeskToolbarItem::updateServiceDeskMenu');
-            $message = GeneralUtility::makeInstance(
-                FlashMessage::class,
-                $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:performCustomerTransition.success.description'),
-                $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:performCustomerTransition.success.title'),
-                FlashMessage::OK, true
-            );
-            $service = GeneralUtility::makeInstance(FlashMessageService::class);
-            $queue = $service->getMessageQueueByIdentifier();
-            $queue->addMessage($message);
+            \TYPO3\CMS\Backend\Utility\BackendUtility::setUpdateSignal('ServiceDeskToolbarItem::updateServiceDeskMenu');
+            $this->objectManager
+                ->get(\TYPO3\CMS\Core\Messaging\FlashMessageService::class)
+                ->getMessageQueueByIdentifier()
+                ->addMessage(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                    \TYPO3\CMS\Core\Messaging\FlashMessage::class,
+                    $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:performCustomerTransition.success.description'),
+                    $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:performCustomerTransition.success.title'),
+                    \TYPO3\CMS\Core\Messaging\FlashMessage::OK, true
+                ));
         } else {
-            $message = GeneralUtility::makeInstance(
-                FlashMessage::class,
-                $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:performCustomerTransition.error.description'),
-                $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:performCustomerTransition.error.title'),
-                FlashMessage::ERROR, true
-            );
-            $service = GeneralUtility::makeInstance(FlashMessageService::class);
-            $queue = $service->getMessageQueueByIdentifier();
-            $queue->addMessage($message);
-        }
-
-        if ($this->cache->isValidTag('jira_service_desk')) {
-            $this->cache->flushByTag('jira_service_desk');
+            $this->objectManager
+                ->get(\TYPO3\CMS\Core\Messaging\FlashMessageService::class)
+                ->getMessageQueueByIdentifier()
+                ->addMessage(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                    \TYPO3\CMS\Core\Messaging\FlashMessage::class,
+                    $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:performCustomerTransition.error.description'),
+                    $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:performCustomerTransition.error.title'),
+                    \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR, true
+                ));
         }
 
         $this->redirect('show', 'ServiceDesk', null, [
-            'issueId' => $arguments['transition']['requestId']
+            'requestId' => $arguments['transition']['requestId']
         ]);
     }
 
@@ -333,8 +282,7 @@ class ServiceDeskController extends ActionController
 
         $arguments = $this->request->getArguments();
 
-        $requestTypes = $this->getRequestTypes($serviceDeskId, true);
-        $serviceDesk = $this->getServiceDeskById($serviceDeskId);
+        $requestTypes = $this->serviceDeskResource->getRequestTypes($serviceDeskId, true);
 
         $requestType = [];
         foreach ($requestTypes->body->values as $value) {
@@ -343,14 +291,11 @@ class ServiceDeskController extends ActionController
             }
         }
 
-        $requestTypeFields = $this->serviceDeskResource->getRequestTypeFields($serviceDeskId, (int)$arguments['requestTypeId']);
-
         $this->view->assignMultiple([
-            'serviceDesk' => $serviceDesk,
+            'serviceDesk' => $this->serviceDeskResource->getServiceDeskById($serviceDeskId),
             'requestType' => $requestType,
-            'requestTypeFields' => $requestTypeFields,
-            'newCustomerRequest' => $arguments['newCustomerRequest'],
-            'hasAccess' => AccessUtility::hasAccess()
+            'requestTypeFields' => $this->serviceDeskResource->getRequestTypeFields($serviceDeskId, (int)$arguments['requestTypeId']),
+            'newCustomerRequest' => $arguments['newCustomerRequest']
         ]);
     }
 
@@ -359,6 +304,7 @@ class ServiceDeskController extends ActionController
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
      */
     public function createAction() : void
     {
@@ -394,15 +340,14 @@ class ServiceDeskController extends ActionController
             foreach ($formData['attachment'] as $attachment) {
                 $files[] = [
                     'name' => $attachment['name'],
-                    'url' => GeneralUtility::upload_to_tempfile($attachment['tmp_name'])
+                    'url' => \TYPO3\CMS\Core\Utility\GeneralUtility::upload_to_tempfile($attachment['tmp_name'])
                 ];
             }
 
             $temporaryAttachments = $this->serviceDeskResource->attachTemporaryFile($serviceDeskId, $files);
 
             if ($temporaryAttachments->getStatus() === 201) {
-                /** @var \Walther\JiraServiceDesk\Domain\Model\Attachment $newAttachment */
-                $newAttachment = GeneralUtility::makeInstance(Attachment::class);
+                $newAttachment = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Walther\JiraServiceDesk\Domain\Model\Attachment::class);
                 $newAttachment->setPublic(true);
                 foreach ($temporaryAttachments->getBody()->temporaryAttachments as $temporaryAttachment) {
                     $newAttachment->addTemporaryAttachmentId($temporaryAttachment->temporaryAttachmentId);
@@ -410,8 +355,7 @@ class ServiceDeskController extends ActionController
             }
         }
 
-        /** @var \Walther\JiraServiceDesk\Domain\Model\Request $newRequest */
-        $newRequest = GeneralUtility::makeInstance(Request::class);
+        $newRequest = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Walther\JiraServiceDesk\Domain\Model\Request::class);
         $newRequest->setServiceDeskId($serviceDeskId);
         $newRequest->setRequestTypeId((int)$arguments['requestType']['id']);
 
@@ -432,46 +376,42 @@ class ServiceDeskController extends ActionController
                 $result2 = $this->requestResource->createAttachment($issueKey, $newAttachment);
 
                 if ($result2->getStatus() !== 201) {
-                    $message = GeneralUtility::makeInstance(
-                        FlashMessage::class,
-                        $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createAttachment.error.description'),
-                        $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createAttachment.error.title'),
-                        FlashMessage::ERROR, true
-                    );
-                    $service = GeneralUtility::makeInstance(FlashMessageService::class);
-                    $queue = $service->getMessageQueueByIdentifier();
-                    $queue->addMessage($message);
+                    $this->objectManager
+                        ->get(\TYPO3\CMS\Core\Messaging\FlashMessageService::class)
+                        ->getMessageQueueByIdentifier()
+                        ->addMessage(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                            \TYPO3\CMS\Core\Messaging\FlashMessage::class,
+                            $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createAttachment.error.description'),
+                            $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createAttachment.error.title'),
+                            \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR, true
+                        ));
                     $this->redirect('new', 'ServiceDesk', null, $arguments);
                 }
             }
 
-            if ($this->cache->isValidTag('jira_service_desk')) {
-                $this->cache->flushByTag('jira_service_desk');
-            }
-
-            BackendUtility::setUpdateSignal('ServiceDeskToolbarItem::updateServiceDeskMenu');
-            $message = GeneralUtility::makeInstance(
-                FlashMessage::class,
-                $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createCustomerRequest.success.description'),
-                $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createCustomerRequest.success.title'),
-                FlashMessage::OK, true
-            );
-            $service = GeneralUtility::makeInstance(FlashMessageService::class);
-            $queue = $service->getMessageQueueByIdentifier();
-            $queue->addMessage($message);
+            \TYPO3\CMS\Backend\Utility\BackendUtility::setUpdateSignal('ServiceDeskToolbarItem::updateServiceDeskMenu');
+            $this->objectManager
+                ->get(\TYPO3\CMS\Core\Messaging\FlashMessageService::class)
+                ->getMessageQueueByIdentifier()
+                ->addMessage(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                    \TYPO3\CMS\Core\Messaging\FlashMessage::class,
+                    $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createCustomerRequest.success.description'),
+                    $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createCustomerRequest.success.title'),
+                    \TYPO3\CMS\Core\Messaging\FlashMessage::OK, true
+                ));
             $this->redirect('show', 'ServiceDesk', null, [
-                'issueId' => $result->body->issueId
+                'requestId' => $result->body->issueId
             ]);
         } else {
-            $message = GeneralUtility::makeInstance(
-                FlashMessage::class,
-                $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createCustomerRequest.error.description'),
-                $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createCustomerRequest.error.title'),
-                FlashMessage::ERROR, true
-            );
-            $service = GeneralUtility::makeInstance(FlashMessageService::class);
-            $queue = $service->getMessageQueueByIdentifier();
-            $queue->addMessage($message);
+            $this->objectManager
+                ->get(\TYPO3\CMS\Core\Messaging\FlashMessageService::class)
+                ->getMessageQueueByIdentifier()
+                ->addMessage(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                    \TYPO3\CMS\Core\Messaging\FlashMessage::class,
+                    $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createCustomerRequest.error.description'),
+                    $this->getLanguageService()->sL('LLL:EXT:jira_service_desk/Resources/Private/Language/locallang.xlf:createCustomerRequest.error.title'),
+                    \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR, true
+                ));
             $this->redirect('index', 'ServiceDesk');
         }
     }
@@ -483,7 +423,7 @@ class ServiceDeskController extends ActionController
      */
     public function helpAction() : void
     {
-        // ...
+
     }
 
     /**
@@ -493,68 +433,7 @@ class ServiceDeskController extends ActionController
      */
     public function accessDeniedAction() : void
     {
-        // ...
-    }
 
-    /**
-     * @param $serviceDeskId
-     *
-     * @return mixed|\Walther\JiraServiceDesk\Service\Response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    private function getRequestTypeGroup($serviceDeskId)
-    {
-        $cacheHash = md5('getRequestTypeGroup');
-
-        if ($items = $this->cache->get($cacheHash)) {
-            return $items;
-        }
-
-        $items = $this->serviceDeskResource->getRequestTypeGroup($serviceDeskId);
-        $this->cache->set($cacheHash, $items, ['jira_service_desk'], $this->lifeTime);
-
-        return $items;
-    }
-
-    /**
-     * @param $serviceDeskId
-     * @param $expand
-     *
-     * @return mixed|\Walther\JiraServiceDesk\Service\Response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    private function getRequestTypes($serviceDeskId, $expand)
-    {
-        $cacheHash = md5('getRequestTypes');
-
-        if ($items = $this->cache->get($cacheHash)) {
-            return $items;
-        }
-
-        $items = $this->serviceDeskResource->getRequestTypes($serviceDeskId, $expand);
-        $this->cache->set($cacheHash, $items, ['jira_service_desk'], $this->lifeTime);
-
-        return $items;
-    }
-
-    /**
-     * @param $serviceDeskId
-     *
-     * @return mixed|\Walther\JiraServiceDesk\Service\Response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    private function getServiceDeskById($serviceDeskId)
-    {
-        $cacheHash = md5('getServiceDeskById');
-
-        if ($items = $this->cache->get($cacheHash)) {
-            return $items;
-        }
-
-        $items = $this->serviceDeskResource->getServiceDeskById($serviceDeskId);
-        $this->cache->set($cacheHash, $items, ['jira_service_desk'], $this->lifeTime);
-
-        return $items;
     }
 
     /**
@@ -562,7 +441,7 @@ class ServiceDeskController extends ActionController
      *
      * @return \TYPO3\CMS\Core\Localization\LanguageService
      */
-    private function getLanguageService() : LanguageService
+    protected function getLanguageService() : \TYPO3\CMS\Core\Localization\LanguageService
     {
         return $GLOBALS['LANG'];
     }

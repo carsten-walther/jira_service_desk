@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\Domain\Model;
 
@@ -6,7 +7,7 @@ namespace Walther\JiraServiceDesk\Domain\Model;
  * Class Attachment
  *
  * @package Walther\JiraServiceDesk\Domain\Model
- * @author  Carsten Walther
+ * @author Carsten Walther
  */
 class Attachment
 {

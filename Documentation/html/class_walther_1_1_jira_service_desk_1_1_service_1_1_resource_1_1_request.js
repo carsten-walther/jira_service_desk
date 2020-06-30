@@ -1,0 +1,27 @@
+var class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request =
+[
+    [ "getCustomerRequests", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#ac28c9625590533b18c9c82913825ad44", null ],
+    [ "createCustomerRequest", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#a73b0f6591f6cef21d9be0ae4d31abfae", null ],
+    [ "getCustomerRequestByIdOrKey", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#abb1f836be608f115ad0f8dbd62b37981", null ],
+    [ "getApprovals", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#aea50f431d178a0b355fb66d97a3f3a37", null ],
+    [ "getApprovalById", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#ab7b970bd09cfeff559abc0b74bc1a850", null ],
+    [ "answerApproval", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#a083b181e751f034c3b28ab99ba5fed98", null ],
+    [ "getAttachmentsForRequest", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#a31b254c9e946f95d030c378ed3961949", null ],
+    [ "createAttachment", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#a3e897fd5f85e6c9aae06750f63a09bf8", null ],
+    [ "getRequestComments", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#a97975c29ecc7c8ffefb7a9de6c101848", null ],
+    [ "createRequestComment", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#a80be44d775c2a4241d031a8bba6e5347", null ],
+    [ "getRequestCommentById", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#a4af727a2d893987b1ba60e2a4ddc1d87", null ],
+    [ "getCommentAttachments", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#a4f94e216d590f2b8730319a135514188", null ],
+    [ "getSubscriptionStatus", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#a63e0913de5101806a482c76877a9f4f8", null ],
+    [ "subscribe", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#a6ebd049d61c8ba15068587c4ef4085b4", null ],
+    [ "unsubscribe", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#a6364618120c43bec1e0a81a88c22a3de", null ],
+    [ "getRequestParticipants", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#afa75a30b1c218273443dde1b62ad74fe", null ],
+    [ "addRequestParticipants", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#ac6d0db71ad11633ef6a206d64f1dc1c8", null ],
+    [ "removeRequestParticipants", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#acfcccd3e43e4eee51cf10843e09a0db9", null ],
+    [ "getSlaInformation", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#ad172ca9723ca2556c778dedb7624612e", null ],
+    [ "getSlaInformationById", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#ae0bab3a533934851faced3cfba090f6d", null ],
+    [ "getRequestStatus", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#a3e10dc1f8b9574192007a2e753e79147", null ],
+    [ "getCustomerTransitions", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#aa516415aec72f2f3c4c75cd0c7168353", null ],
+    [ "performCustomerTransition", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#a47a821eb7221a5c13d13a7a974cac525", null ],
+    [ "$resource", "class_walther_1_1_jira_service_desk_1_1_service_1_1_resource_1_1_request.html#abd4c7b8b084214b8d2533ba07fce6b83", null ]
+];

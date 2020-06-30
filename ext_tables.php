@@ -6,19 +6,19 @@
 
 defined('TYPO3_MODE') or die();
 
-call_user_func(static function($extKey) {
+call_user_func(function($extKey) {
 
     if (TYPO3_MODE === 'BE') {
 
         \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-            'Walther.JiraServiceDesk',
-            'help',
-            'jira',
-            'top',
-            [
+            $extensionName = 'Walther.JiraServiceDesk',
+            $mainModuleName = 'help',
+            $subModuleName = 'jira',
+            $position = 'top',
+            $controllerActions = [
                 'ServiceDesk' => 'index,list,show,addComment,addTransition,new,create,help,accessDenied'
             ],
-            [
+            $moduleConfiguration = [
                 'access' => 'user,group,admin',
                 'icon' => 'EXT:' . $extKey . '/Resources/Public/Icons/extension.svg',
                 'labels' => 'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang_module.xlf'

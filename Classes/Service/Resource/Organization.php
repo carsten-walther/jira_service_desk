@@ -1,16 +1,13 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\Service\Resource;
 
-use Walther\JiraServiceDesk\Service\Response;
-use Walther\JiraServiceDesk\Service\Service;
-
 /**
  * Class Organization
- *
  * @package Walther\JiraServiceDesk\Service
  */
-class Organization extends AbstractResource
+class Organization extends \Walther\JiraServiceDesk\Service\Resource\AbstractResource
 {
     /**
      * @var string
@@ -31,7 +28,7 @@ class Organization extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getOrganizations(int $start = 0, int $limit = 20) : Response
+    public function getOrganizations(int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'start' => $start,
@@ -39,7 +36,7 @@ class Organization extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource)
             ->setGetParams($data)
             ->request();
@@ -57,14 +54,14 @@ class Organization extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function createOrganization(string $name) : Response
+    public function createOrganization(string $name) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'name' => $name
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_POST)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_POST)
             ->setPostData($data)
             ->setUrl($this->resource)
             ->request();
@@ -83,10 +80,10 @@ class Organization extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getOrganization(int $id) : Response
+    public function getOrganization(int $id) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $id)
             ->request();
     }
@@ -104,10 +101,10 @@ class Organization extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function deleteOrganization(string $id) : Response
+    public function deleteOrganization(string $id) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_DELETE)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_DELETE)
             ->setUrl($this->resource . '/' . $id)
             ->request();
     }
@@ -125,10 +122,10 @@ class Organization extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getPropertiesKeys(string $id) : Response
+    public function getPropertiesKeys(string $id) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $id . '/property')
             ->request();
     }
@@ -149,7 +146,7 @@ class Organization extends AbstractResource
     public function setProperty(string $id, string $propertyKey)
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_PUT)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_PUT)
             ->setUrl($this->resource . '/' . $id . '/property/' . $propertyKey)
             ->request();
     }
@@ -167,10 +164,10 @@ class Organization extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function deleteProperty(string $id, string $propertyKey) : Response
+    public function deleteProperty(string $id, string $propertyKey) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_DELETE)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_DELETE)
             ->setUrl($this->resource . '/' . $id . '/property/' . $propertyKey)
             ->request();
     }
@@ -190,7 +187,7 @@ class Organization extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getUsersInOrganization(int $id, int $start = 0, int $limit = 20) : Response
+    public function getUsersInOrganization(int $id, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'start' => $start,
@@ -198,7 +195,7 @@ class Organization extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $id . '/user')
             ->setGetParams($data)
             ->request();
@@ -218,7 +215,7 @@ class Organization extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function addUsersToOrganization(int $id, array $usernames = [], array $accountIds = []) : Response
+    public function addUsersToOrganization(int $id, array $usernames = [], array $accountIds = []) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'usernames' => $usernames,
@@ -226,7 +223,7 @@ class Organization extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_POST)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_POST)
             ->setPostData($data)
             ->setUrl($this->resource . '/' . $id . '/user')
             ->request();
@@ -246,7 +243,7 @@ class Organization extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function removeUsersFromOrganization(int $id, array $usernames = [], array $accountIds = []) : Response
+    public function removeUsersFromOrganization(int $id, array $usernames = [], array $accountIds = []) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'usernames' => $usernames,
@@ -254,7 +251,7 @@ class Organization extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_DELETE)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_DELETE)
             ->setPostData($data)
             ->setUrl($this->resource . '/' . $id . '/user')
             ->request();
@@ -274,7 +271,7 @@ class Organization extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getOrganizationsByServiceDeskId(int $id, int $start = 0, int $limit = 20) : Response
+    public function getOrganizationsByServiceDeskId(int $id, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'start' => $start,
@@ -282,7 +279,7 @@ class Organization extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl('servicedesk/' . $id . '/' . $this->resource)
             ->setGetParams($data)
             ->request();
@@ -300,14 +297,14 @@ class Organization extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function addOrganizationToServiceDesk(int $id, int $organizationId) : Response
+    public function addOrganizationToServiceDesk(int $id, int $organizationId) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'organizationId' => $organizationId
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_POST)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_POST)
             ->setPostData($data)
             ->setUrl('servicedesk/' . $id . '/' . $this->resource)
             ->setGetParams($data)
@@ -328,14 +325,14 @@ class Organization extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function removeOrganizationFromServiceDesk(int $id, int $organizationId) : Response
+    public function removeOrganizationFromServiceDesk(int $id, int $organizationId) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'organizationId' => $organizationId
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_DELETE)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_DELETE)
             ->setPostData($data)
             ->setUrl('servicedesk/' . $id . '/' . $this->resource)
             ->setGetParams($data)

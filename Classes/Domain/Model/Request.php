@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\Domain\Model;
 
@@ -6,7 +7,7 @@ namespace Walther\JiraServiceDesk\Domain\Model;
  * Class Request
  *
  * @package Walther\JiraServiceDesk\Domain\Model
- * @author  Carsten Walther
+ * @author Carsten Walther
  */
 class Request
 {
@@ -83,7 +84,7 @@ class Request
      *
      * @return \Walther\JiraServiceDesk\Domain\Model\Request
      */
-    public function setServiceDeskId(int $serviceDeskId) : Request
+    public function setServiceDeskId(int $serviceDeskId) : \Walther\JiraServiceDesk\Domain\Model\Request
     {
         $this->serviceDeskId = $serviceDeskId;
         return $this;
@@ -106,7 +107,7 @@ class Request
      *
      * @return \Walther\JiraServiceDesk\Domain\Model\Request
      */
-    public function setRequestTypeId(int $requestTypeId) : Request
+    public function setRequestTypeId(int $requestTypeId) : \Walther\JiraServiceDesk\Domain\Model\Request
     {
         $this->requestTypeId = $requestTypeId;
         return $this;
@@ -129,7 +130,7 @@ class Request
      *
      * @return \Walther\JiraServiceDesk\Domain\Model\Request
      */
-    public function setRequestSummary(string $summary) : Request
+    public function setRequestSummary(string $summary) : \Walther\JiraServiceDesk\Domain\Model\Request
     {
         $this->requestFieldValues[self::VAR_SUMMARY] = $summary;
         return $this;
@@ -142,7 +143,7 @@ class Request
      *
      * @return \Walther\JiraServiceDesk\Domain\Model\Request
      */
-    public function setRequestDescription(string $description) : Request
+    public function setRequestDescription(string $description) : \Walther\JiraServiceDesk\Domain\Model\Request
     {
         $this->requestFieldValues[self::VAR_DESCRIPTION] = $description;
         return $this;
@@ -155,7 +156,7 @@ class Request
      *
      * @return \Walther\JiraServiceDesk\Domain\Model\Request
      */
-    public function setRequestDueDate(string $due_date) : Request
+    public function setRequestDueDate(string $due_date) : \Walther\JiraServiceDesk\Domain\Model\Request
     {
         $this->requestFieldValues[self::VAR_DUE_DATE] = $due_date;
         return $this;
@@ -168,7 +169,7 @@ class Request
      *
      * @return \Walther\JiraServiceDesk\Domain\Model\Request
      */
-    public function setRequestLabels(array $labels) : Request
+    public function setRequestLabels(array $labels) : \Walther\JiraServiceDesk\Domain\Model\Request
     {
         $this->requestFieldValues[self::VAR_LABELS] = $labels;
         return $this;
@@ -181,7 +182,7 @@ class Request
      *
      * @return \Walther\JiraServiceDesk\Domain\Model\Request
      */
-    public function addRequestLabels(string $label) : Request
+    public function addRequestLabels(string $label) : \Walther\JiraServiceDesk\Domain\Model\Request
     {
         $this->requestFieldValues[self::VAR_LABELS][] = $label;
         return $this;
@@ -194,7 +195,7 @@ class Request
      *
      * @return \Walther\JiraServiceDesk\Domain\Model\Request
      */
-    public function setRequestComponents(array $components) : Request
+    public function setRequestComponents(array $components) : \Walther\JiraServiceDesk\Domain\Model\Request
     {
         $this->requestFieldValues[self::VAR_COMPONENTS] = $components;
         return $this;
@@ -208,7 +209,7 @@ class Request
      *
      * @return \Walther\JiraServiceDesk\Domain\Model\Request
      */
-    public function addRequestComponent(string $key, string $value) : Request
+    public function addRequestComponent(string $key, string $value) : \Walther\JiraServiceDesk\Domain\Model\Request
     {
         $this->requestFieldValues[self::VAR_COMPONENTS][] = [$key => $value];
         return $this;
@@ -222,7 +223,7 @@ class Request
      *
      * @return \Walther\JiraServiceDesk\Domain\Model\Request
      */
-    public function setRequestCustomField(string $field_key, $value) : Request
+    public function setRequestCustomField(string $field_key, $value) : \Walther\JiraServiceDesk\Domain\Model\Request
     {
         $this->requestFieldValues[$field_key] = $value;
         return $this;
@@ -245,7 +246,7 @@ class Request
      *
      * @return \Walther\JiraServiceDesk\Domain\Model\Request
      */
-    public function setRequestParticipants(array $requestParticipants) : Request
+    public function setRequestParticipants(array $requestParticipants) : \Walther\JiraServiceDesk\Domain\Model\Request
     {
         $this->requestParticipants = $requestParticipants;
         return $this;
@@ -258,7 +259,7 @@ class Request
      *
      * @return \Walther\JiraServiceDesk\Domain\Model\Request
      */
-    public function addRequestParticipant(string $requestParticipant) : Request
+    public function addRequestParticipant(string $requestParticipant) : \Walther\JiraServiceDesk\Domain\Model\Request
     {
         $this->requestParticipants[] = $requestParticipant;
         return $this;
@@ -281,7 +282,7 @@ class Request
      *
      * @return \Walther\JiraServiceDesk\Domain\Model\Request
      */
-    public function setRaiseOnBehalfOf(int $raiseOnBehalfOf) : Request
+    public function setRaiseOnBehalfOf(int $raiseOnBehalfOf) : \Walther\JiraServiceDesk\Domain\Model\Request
     {
         $this->raiseOnBehalfOf = $raiseOnBehalfOf;
         return $this;

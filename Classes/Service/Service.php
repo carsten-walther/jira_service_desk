@@ -1,15 +1,13 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\Service;
-
-use GuzzleHttp\Client;
-use Walther\JiraServiceDesk\Utility\AccessUtility;
 
 /**
  * Class Service
  *
  * @package Walther\JiraServiceDesk\Service
- * @author  Carsten Walther
+ * @author Carsten Walther
  */
 class Service
 {
@@ -21,29 +19,22 @@ class Service
     /**
      * REQUEST_METHOD_GET
      */
-    public const REQUEST_METHOD_GET = 'GET';
+    const REQUEST_METHOD_GET = 'GET';
 
     /**
      * REQUEST_METHOD_POST
      */
-    public const REQUEST_METHOD_POST = 'POST';
+    const REQUEST_METHOD_POST = 'POST';
 
     /**
      * REQUEST_METHOD_PUT
      */
-    public const REQUEST_METHOD_PUT = 'PUT';
+    const REQUEST_METHOD_PUT = 'PUT';
 
     /**
      * REQUEST_METHOD_DELETE
      */
-    public const REQUEST_METHOD_DELETE = 'DELETE';
-
-    /**
-     * The options.
-     *
-     * @var array
-     */
-    public $options = [];
+    const REQUEST_METHOD_DELETE = 'DELETE';
 
     /**
      * The username.
@@ -102,15 +93,42 @@ class Service
     private $client;
 
     /**
+     * The options.
+     *
+     * @var array
+     */
+    public $options = [];
+
+    /**
      * Service constructor.
      *
      * @return void
      */
     public function __construct()
     {
-        $this->client = new Client([
+        $this->client = new \GuzzleHttp\Client([
             'http_errors' => false
         ]);
+    }
+
+    /**
+     * Returns the username.
+     *
+     * @return string
+     */
+    protected function getUsername() : string
+    {
+        return \Walther\JiraServiceDesk\Utility\AccessUtility::getBackendUser()->user['serviceDeskUsername'];
+    }
+
+    /**
+     * Returns the password.
+     *
+     * @return string
+     */
+    protected function getPassword() : string
+    {
+        return \Walther\JiraServiceDesk\Utility\AccessUtility::getBackendUser()->user['serviceDeskPassword'];
     }
 
     /**
@@ -120,13 +138,9 @@ class Service
      */
     public function initialize()
     {
-        if (AccessUtility::hasAccess()) {
+        if (\Walther\JiraServiceDesk\Utility\AccessUtility::hasAccess()) {
 
             $extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['jira_service_desk'];
-
-            if (substr($extensionConfiguration['serviceDeskUrl'], -1) !== '/') {
-                $extensionConfiguration['serviceDeskUrl'] .= '/';
-            }
 
             $this->setHost($extensionConfiguration['serviceDeskUrl']);
             $this->setPassword($this->getPassword());
@@ -146,43 +160,10 @@ class Service
      *
      * @return \Walther\JiraServiceDesk\Service\Service
      */
-    public function setHost(string $host) : Service
+    public function setHost(string $host) : \Walther\JiraServiceDesk\Service\Service
     {
         $this->host = $host;
         return $this;
-    }
-
-    /**
-     * Returns the password.
-     *
-     * @return string
-     */
-    protected function getPassword() : string
-    {
-        return AccessUtility::getBackendUser()->user['serviceDeskPassword'];
-    }
-
-    /**
-     * Setter for password.
-     *
-     * @param $password
-     *
-     * @return \Walther\JiraServiceDesk\Service\Service
-     */
-    public function setPassword($password) : Service
-    {
-        $this->password = $password;
-        return $this;
-    }
-
-    /**
-     * Returns the username.
-     *
-     * @return string
-     */
-    protected function getUsername() : string
-    {
-        return AccessUtility::getBackendUser()->user['serviceDeskUsername'];
     }
 
     /**
@@ -192,22 +173,22 @@ class Service
      *
      * @return \Walther\JiraServiceDesk\Service\Service
      */
-    public function setUsername($username) : Service
+    public function setUsername($username) : \Walther\JiraServiceDesk\Service\Service
     {
         $this->username = $username;
         return $this;
     }
 
     /**
-     * Setter for header.
+     * Setter for password.
      *
-     * @param $headers
+     * @param $password
      *
      * @return \Walther\JiraServiceDesk\Service\Service
      */
-    public function setHeaders($headers) : Service
+    public function setPassword($password) : \Walther\JiraServiceDesk\Service\Service
     {
-        $this->options['headers'] = $headers;
+        $this->password = $password;
         return $this;
     }
 
@@ -218,7 +199,7 @@ class Service
      *
      * @return \Walther\JiraServiceDesk\Service\Service
      */
-    public function setType($type) : Service
+    public function setType($type) : \Walther\JiraServiceDesk\Service\Service
     {
         $this->type = $type;
         return $this;
@@ -231,7 +212,7 @@ class Service
      *
      * @return \Walther\JiraServiceDesk\Service\Service
      */
-    public function setUrl($url) : Service
+    public function setUrl($url) : \Walther\JiraServiceDesk\Service\Service
     {
         $this->url = $this->host . self::METHOD_URL . $url;
         return $this;
@@ -244,10 +225,10 @@ class Service
      *
      * @return \Walther\JiraServiceDesk\Service\Service
      */
-    public function setGetParams(array $data) : Service
+    public function setGetParams(array $data) : \Walther\JiraServiceDesk\Service\Service
     {
         $data = array_filter($data, static function ($value) {
-            return ($value !== null && $value !== false && $value !== '');
+            return ($value !== NULL && $value !== FALSE && $value !== '');
         }, ARRAY_FILTER_USE_BOTH);
 
         $expand = '';
@@ -284,9 +265,22 @@ class Service
      *
      * @return \Walther\JiraServiceDesk\Service\Service
      */
-    public function setPostData($post_data) : Service
+    public function setPostData($post_data) : \Walther\JiraServiceDesk\Service\Service
     {
         $this->options['json'] = $post_data;
+        return $this;
+    }
+
+    /**
+     * Setter for header.
+     *
+     * @param $headers
+     *
+     * @return \Walther\JiraServiceDesk\Service\Service
+     */
+    public function setHeaders($headers) : \Walther\JiraServiceDesk\Service\Service
+    {
+        $this->options['headers'] = $headers;
         return $this;
     }
 
@@ -297,7 +291,7 @@ class Service
      *
      * @return \Walther\JiraServiceDesk\Service\Service
      */
-    public function setMultipart($multipart) : Service
+    public function setMultipart($multipart) : \Walther\JiraServiceDesk\Service\Service
     {
         $this->options['multipart'] = $multipart;
         return $this;
@@ -308,7 +302,7 @@ class Service
      *
      * @return \Walther\JiraServiceDesk\Service\Service
      */
-    public function setExperimentalApi() : Service
+    public function setExperimentalApi() : \Walther\JiraServiceDesk\Service\Service
     {
         $this->options['headers']['X-ExperimentalApi'] = 'opt-in';
         return $this;
@@ -320,11 +314,11 @@ class Service
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function request() : Response
+    public function request() : \Walther\JiraServiceDesk\Service\Response
     {
         if ($this->username && $this->password) {
             $this->options['auth'] = [$this->username, $this->password];
         }
-        return new Response($this->client->request($this->type, $this->url . $this->getParams, $this->options));
+        return new \Walther\JiraServiceDesk\Service\Response($this->client->request($this->type, $this->url . $this->getParams, $this->options));
     }
 }

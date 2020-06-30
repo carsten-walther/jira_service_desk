@@ -1,23 +1,15 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\Reports;
-
-use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Reports\Status;
-use TYPO3\CMS\Reports\StatusProviderInterface;
-use Walther\JiraServiceDesk\Service\Resource\Info;
-use Walther\JiraServiceDesk\Service\Service;
-use Walther\JiraServiceDesk\Utility\AccessUtility;
 
 /**
  * Provides an status report of the jira service desk.
  *
  * @package Walther\JiraServiceDesk\Reports
- * @author  Carsten Walther
+ * @author Carsten Walther
  */
-class Report implements StatusProviderInterface
+class Report implements \TYPO3\CMS\Reports\StatusProviderInterface
 {
     /**
      * Array of reports.
@@ -44,13 +36,12 @@ class Report implements StatusProviderInterface
      * Report constructor initializes the Objectmanager and the LanguageService.
      *
      * @return void
-     * @throws \TYPO3\CMS\Extbase\Object\Exception
      */
     public function __construct()
     {
-        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\ObjectManager::class);
 
-        $this->languageService = $this->objectManager->get(LanguageService::class);
+        $this->languageService = $this->objectManager->get(\TYPO3\CMS\Core\Localization\LanguageService::class);
         $this->languageService->includeLLFile('EXT:jira_service_desk/Resources/Private/Language/locallang_report.xlf');
     }
 
@@ -59,7 +50,6 @@ class Report implements StatusProviderInterface
      *
      * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \TYPO3\CMS\Extbase\Object\Exception
      */
     public function getStatus()
     {
@@ -78,7 +68,6 @@ class Report implements StatusProviderInterface
      * Check the extension configuration and add reports to report array.
      *
      * @return bool
-     * @throws \TYPO3\CMS\Extbase\Object\Exception
      */
     protected function checkExtensionConfiguration() : bool
     {
@@ -88,22 +77,22 @@ class Report implements StatusProviderInterface
         if ($extensionConfiguration['serviceDeskUrl']) {
             $pass = true;
         }
-        $this->reports[] = GeneralUtility::makeInstance(Status::class,
+        $this->reports[] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Reports\Status::class,
             $this->languageService->getLL('report.check.serviceDeskUrl.title'),
             $pass ? 'OK' : 'Error',
             $pass ? '' : $this->languageService->getLL('report.check.serviceDeskUrl.description'),
-            $pass ? Status::OK : Status::ERROR
+            $pass ? \TYPO3\CMS\Reports\Status::OK : \TYPO3\CMS\Reports\Status::ERROR
         );
 
         $pass = false;
         if ($extensionConfiguration['serviceDeskId']) {
             $pass = true;
         }
-        $this->reports[] = GeneralUtility::makeInstance(Status::class,
+        $this->reports[] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Reports\Status::class,
             $this->languageService->getLL('report.check.serviceDeskId.title'),
             $pass ? 'OK' : 'Error',
             $pass ? '' : $this->languageService->getLL('report.check.serviceDeskId.description'),
-            $pass ? Status::OK : Status::ERROR
+            $pass ? \TYPO3\CMS\Reports\Status::OK : \TYPO3\CMS\Reports\Status::ERROR
         );
 
         return $pass;
@@ -114,29 +103,25 @@ class Report implements StatusProviderInterface
      *
      * @return bool
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \TYPO3\CMS\Extbase\Object\Exception
      */
     protected function checkServicedeskAvailability() : bool
     {
+        $service = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Walther\JiraServiceDesk\Service\Service::class)->initialize();
+
+        $info = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Walther\JiraServiceDesk\Service\Resource\Info::class, $service)->getInfo();
+
         $pass = false;
-        $msg = 'Please check the user credentials!';
+        $msg = '';
 
-        if (AccessUtility::hasAccess()) {
-            $service = GeneralUtility::makeInstance(Service::class)->initialize();
-
-            $info = GeneralUtility::makeInstance(Info::class, $service)->getInfo();
-
-            if ($info->status === 200) {
-                $pass = true;
-                $msg = 'Version: ' . $info->body->version . '<br>Platform: ' . $info->body->platformVersion . '<br>Build date: ' . $info->body->buildDate->friendly;
-            }
+        if ($info->status === 200) {
+            $pass = true;
+            $msg = 'Version: ' . $info->body->version . '<br>Platform: ' . $info->body->platformVersion . '<br>Build date: ' . $info->body->buildDate->friendly;
         }
-
-        $this->reports[] = GeneralUtility::makeInstance(Status::class,
+        $this->reports[] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Reports\Status::class,
             $this->languageService->getLL('report.check.serviceDeskAvailability.title'),
             $pass ? 'OK' : 'Error',
-            $msg ? $msg : $this->languageService->getLL('report.check.serviceDeskAvailability.description'),
-            $pass ? Status::OK : Status::ERROR
+            $pass ? $msg : $this->languageService->getLL('report.check.serviceDeskAvailability.description'),
+            $pass ? \TYPO3\CMS\Reports\Status::OK : \TYPO3\CMS\Reports\Status::ERROR
         );
 
         return $pass;

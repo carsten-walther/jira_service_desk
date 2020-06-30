@@ -1,22 +1,17 @@
 <?php
+declare(strict_types = 1);
 
 namespace Walther\JiraServiceDesk\Service\Resource;
 
-use Walther\JiraServiceDesk\Domain\Model\Attachment;
-use Walther\JiraServiceDesk\Service\Response;
-use Walther\JiraServiceDesk\Service\Service;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Class Request
  *
  * @package Walther\JiraServiceDesk\Service
  */
-class Request extends AbstractResource
+class Request extends \Walther\JiraServiceDesk\Service\Resource\AbstractResource
 {
-    public const OPEN_REQUESTS = 'OPEN_REQUESTS';
-    public const CLOSED_REQUESTS = 'CLOSED_REQUESTS';
-    public const ALL_REQUESTS = 'ALL_REQUESTS';
-
     /**
      * @var string
      */
@@ -31,22 +26,22 @@ class Request extends AbstractResource
      *
      * @see https://developer.atlassian.com/cloud/jira/service-desk/rest/#api-rest-servicedeskapi-request-get
      *
-     * @param int    $serviceDeskId
-     * @param int    $requestTypeId
-     * @param bool   $expand
+     * @param int $serviceDeskId
+     * @param int $requestTypeId
+     * @param bool $expand
      * @param string $searchTerm
      * @param string $requestOwnership
      * @param string $requestStatus
      * @param string $approvalStatus
      * @param string $organizationId
-     * @param int    $start
-     * @param int    $limit
+     * @param int $start
+     * @param int $limit
      *
      * @return \Walther\JiraServiceDesk\Service\Response
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getCustomerRequests(int $serviceDeskId = 0, int $requestTypeId = 0, bool $expand = false, string $searchTerm = '', string $requestOwnership = '', string $requestStatus = '', string $approvalStatus = '', string $organizationId = '', int $start = 0, int $limit = 20) : Response
+    public function getCustomerRequests(int $serviceDeskId = 0, int $requestTypeId = 0, bool $expand = false, string $searchTerm = '', string $requestOwnership = '', string $requestStatus = '', string $approvalStatus = '', string $organizationId = '', int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'serviceDeskId' => $serviceDeskId,
@@ -65,7 +60,7 @@ class Request extends AbstractResource
         }
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource)
             ->setGetParams($data)
             ->request();
@@ -83,10 +78,10 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function createCustomerRequest(\Walther\JiraServiceDesk\Domain\Model\Request $request) : Response
+    public function createCustomerRequest(\Walther\JiraServiceDesk\Domain\Model\Request $request) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_POST)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_POST)
             ->setPostData((array)$request)
             ->setUrl($this->resource)
             ->request();
@@ -100,12 +95,12 @@ class Request extends AbstractResource
      * @see https://developer.atlassian.com/cloud/jira/service-desk/rest/#api-rest-servicedeskapi-request-issueIdOrKey-get
      *
      * @param string $issueIdOrKey
-     * @param bool   $expand
+     * @param bool $expand
      *
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getCustomerRequestByIdOrKey(string $issueIdOrKey, bool $expand = false) : Response
+    public function getCustomerRequestByIdOrKey(string $issueIdOrKey, bool $expand = false) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [];
 
@@ -114,7 +109,7 @@ class Request extends AbstractResource
         }
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $issueIdOrKey)
             ->setGetParams($data)
             ->request();
@@ -134,7 +129,7 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getApprovals(string $issueIdOrKey, int $start = 0, int $limit = 20) : Response
+    public function getApprovals(string $issueIdOrKey, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'start' => $start,
@@ -142,7 +137,7 @@ class Request extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/approval')
             ->setGetParams($data)
             ->request();
@@ -161,10 +156,10 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getApprovalById(string $issueIdOrKey, int $approvalId) : Response
+    public function getApprovalById(string $issueIdOrKey, int $approvalId) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/approval/' . $approvalId)
             ->request();
     }
@@ -184,14 +179,14 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function answerApproval(string $issueIdOrKey, int $approvalId, string $decision = '') : Response
+    public function answerApproval(string $issueIdOrKey, int $approvalId, string $decision = '') : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'decision' => $decision
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_POST)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_POST)
             ->setPostData($data)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/approval/' . $approvalId)
             ->request();
@@ -211,7 +206,7 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getAttachmentsForRequest(string $issueIdOrKey, int $start = 0, int $limit = 20) : Response
+    public function getAttachmentsForRequest(string $issueIdOrKey, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'start' => $start,
@@ -219,7 +214,7 @@ class Request extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/attachment')
             ->setGetParams($data)
             ->request();
@@ -240,10 +235,10 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function createAttachment($issueIdOrKey, Attachment $attachment) : Response
+    public function createAttachment($issueIdOrKey, \Walther\JiraServiceDesk\Domain\Model\Attachment $attachment) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_POST)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_POST)
             ->setPostData((array)$attachment)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/attachment')
             ->request();
@@ -267,11 +262,11 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getRequestComments(string $issueIdOrKey, bool $public = true, bool $internal = true, bool $expand = false, int $start = 0, int $limit = 20) : Response
+    public function getRequestComments(string $issueIdOrKey, bool $public = true, bool $internal = true, bool $expand = false, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'public' => $public ? 'true' : 'false',
-            'internal' => $internal ? 'true' : 'false',
+            'internal' =>  $internal ? 'true' : 'false',
             'start' => $start,
             'limit' => $limit
         ];
@@ -281,7 +276,7 @@ class Request extends AbstractResource
         }
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/comment')
             ->setGetParams($data)
             ->request();
@@ -302,7 +297,7 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function createRequestComment(string $issueIdOrKey, string $body, bool $public = true) : Response
+    public function createRequestComment(string $issueIdOrKey, string $body, bool $public = true) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'body' => $body,
@@ -310,7 +305,7 @@ class Request extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_POST)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_POST)
             ->setPostData($data)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/comment')
             ->request();
@@ -330,7 +325,7 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getRequestCommentById(string $issueIdOrKey, int $commentId, bool $expand = false) : Response
+    public function getRequestCommentById(string $issueIdOrKey, int $commentId, bool $expand = false) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [];
 
@@ -339,7 +334,7 @@ class Request extends AbstractResource
         }
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/comment/' . $commentId)
             ->setGetParams($data)
             ->request();
@@ -360,7 +355,7 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getCommentAttachments(string $issueIdOrKey, int $commentId, int $start = 0, int $limit = 20) : Response
+    public function getCommentAttachments(string $issueIdOrKey, int $commentId, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'start' => $start,
@@ -368,7 +363,7 @@ class Request extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/comment/' . $commentId . '/attachment')
             ->setGetParams($data)
             ->setExperimentalApi()
@@ -388,10 +383,10 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getSubscriptionStatus(string $issueIdOrKey) : Response
+    public function getSubscriptionStatus(string $issueIdOrKey) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/notification')
             ->setGetParams([])
             ->request();
@@ -409,10 +404,10 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function subscribe(string $issueIdOrKey) : Response
+    public function subscribe(string $issueIdOrKey) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_PUT)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_PUT)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/notification')
             ->request();
     }
@@ -429,10 +424,10 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function unsubscribe(string $issueIdOrKey) : Response
+    public function unsubscribe(string $issueIdOrKey) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_DELETE)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_DELETE)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/notification')
             ->request();
     }
@@ -451,7 +446,7 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getRequestParticipants(string $issueIdOrKey, int $start = 0, int $limit = 20) : Response
+    public function getRequestParticipants(string $issueIdOrKey, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'start' => $start,
@@ -459,7 +454,7 @@ class Request extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/participant')
             ->setGetParams($data)
             ->request();
@@ -479,7 +474,7 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function addRequestParticipants(string $issueIdOrKey, array $usernames = [], array $accountIds = []) : Response
+    public function addRequestParticipants(string $issueIdOrKey, array $usernames = [], array $accountIds = []) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'usernames' => $usernames,
@@ -487,7 +482,7 @@ class Request extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_POST)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_POST)
             ->setPostData($data)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/participant')
             ->request();
@@ -507,7 +502,7 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function removeRequestParticipants(string $issueIdOrKey, array $usernames = [], array $accountIds = []) : Response
+    public function removeRequestParticipants(string $issueIdOrKey, array $usernames = [], array $accountIds = []) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'usernames' => $usernames,
@@ -515,7 +510,7 @@ class Request extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_DELETE)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_DELETE)
             ->setPostData($data)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/participant')
             ->request();
@@ -537,7 +532,7 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getSlaInformation(string $issueIdOrKey, int $start = 0, int $limit = 20) : Response
+    public function getSlaInformation(string $issueIdOrKey, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'start' => $start,
@@ -545,7 +540,7 @@ class Request extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/sla')
             ->setGetParams($data)
             ->request();
@@ -564,10 +559,10 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getSlaInformationById(string $issueIdOrKey, int $slaMetricId) : Response
+    public function getSlaInformationById(string $issueIdOrKey, int $slaMetricId) : \Walther\JiraServiceDesk\Service\Response
     {
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/sla/' . $slaMetricId)
             ->request();
     }
@@ -588,7 +583,7 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getRequestStatus(string $issueIdOrKey, int $start = 0, int $limit = 20) : Response
+    public function getRequestStatus(string $issueIdOrKey, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'start' => $start,
@@ -596,7 +591,7 @@ class Request extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/status')
             ->setGetParams($data)
             ->request();
@@ -618,7 +613,7 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getCustomerTransitions(string $issueIdOrKey, int $start = 0, int $limit = 20) : Response
+    public function getCustomerTransitions(string $issueIdOrKey, int $start = 0, int $limit = 20) : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'start' => $start,
@@ -626,7 +621,7 @@ class Request extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_GET)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_GET)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/transition')
             ->setGetParams($data)
             ->setExperimentalApi()
@@ -648,7 +643,7 @@ class Request extends AbstractResource
      * @return \Walther\JiraServiceDesk\Service\Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function performCustomerTransition(string $issueIdOrKey, int $transitionId, string $additionalComment = '') : Response
+    public function performCustomerTransition(string $issueIdOrKey, int $transitionId, string $additionalComment = '') : \Walther\JiraServiceDesk\Service\Response
     {
         $data = [
             'id' => $transitionId,
@@ -658,7 +653,7 @@ class Request extends AbstractResource
         ];
 
         return $this->service
-            ->setType(Service::REQUEST_METHOD_POST)
+            ->setType(\Walther\JiraServiceDesk\Service\Service::REQUEST_METHOD_POST)
             ->setPostData($data)
             ->setUrl($this->resource . '/' . $issueIdOrKey . '/transition')
             ->setExperimentalApi()
